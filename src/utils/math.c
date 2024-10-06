@@ -6,7 +6,7 @@
 /*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 19:51:43 by yasmine           #+#    #+#             */
-/*   Updated: 2024/09/04 08:50:40 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/06 20:15:51 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,3 +38,4 @@ int max_of(int i, int j)
     else
         return (i);
 }
+

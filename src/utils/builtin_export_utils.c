@@ -6,18 +6,12 @@
 /*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 21:43:06 by yasmine           #+#    #+#             */
-/*   Updated: 2024/09/07 10:36:40 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/06 20:06:12 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-/*
-Combines consecutive arguments from a list (args), starting from a
-specific index, until a stopping condition is met (token_class).
-token_class[i] < 0 serves as a flag to the parser that the tokens in args
-are protected and should be matched with the previous token
-*/
 char	*assemble_argument(char **args, int *token_class, int i)//init_args
 {
 	char	*arg;
@@ -34,10 +28,6 @@ char	*assemble_argument(char **args, int *token_class, int i)//init_args
 	return (combined_arg);
 }
 
-/*
-Increments index until it finds a positive type, which marks the beginning
-of a new argument that should not be combined with the previous one.
-*/
 int get_next_positive(char **args, int *token_class, int i)
 {
     while (args[++i])
@@ -48,10 +38,6 @@ int get_next_positive(char **args, int *token_class, int i)
     return (i);
 }
 
-/*
-Restructure the arguments, combining those with negative types and
-creating a new argument array
-*/
 char **join_args(char **args, int *token_class)
 {
     int i;
@@ -94,3 +80,4 @@ char **arg_add(char *arg, char **arr)
     arr = new_arr;
     return (arr);
 }
+

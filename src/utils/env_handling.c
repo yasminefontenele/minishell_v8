@@ -6,15 +6,13 @@
 /*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 21:06:17 by yasmine           #+#    #+#             */
-/*   Updated: 2024/09/23 16:08:59 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/06 20:15:07 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 #include "../exec/execute.h"
 
-//searches for the environment variable by name and when it finds it,
-//updates its value.
 void env_update(char *env, char *new_value, t_shell *shell)
 {
     int i;
@@ -45,10 +43,6 @@ void env_update(char *env, char *new_value, t_shell *shell)
     free_str_array(sorted_env);
 }
 
-
-
-//replaces the environment variable string,
-//preserving the name and changing only the value.
 void replace_value(int i, char *new_value, int len, char **arr)
 {
     int j;
@@ -73,3 +67,4 @@ void replace_value(int i, char *new_value, int len, char **arr)
     free(arr[i]);
     arr[i] = new_var;
 }
+

@@ -6,7 +6,7 @@
 /*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 08:08:44 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/06 14:00:30 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/06 23:03:43 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ char *remove_quotes(char *token)
      printf("apos split: var='%s', value='%s'\n", *var, *value);
 
 }*/
-
+//VALIDA
 void split_var_value(char *arg, char **var, char **value)
 {
     char *eq_pos;
@@ -117,11 +117,11 @@ void split_var_value(char *arg, char **var, char **value)
         return;
     }
     *var = ft_strndup(arg, eq_pos - arg);
+
+
     if (*(eq_pos + 1) != '\0')
     {
         *value = ft_strdup(eq_pos + 1);
-
-
         len = ft_strlen(*value);
         if (len >= 2 && ((*value)[0] == '"' && (*value)[len - 1] == '"'))
         {
@@ -137,6 +137,7 @@ void split_var_value(char *arg, char **var, char **value)
     else
         *value = ft_strdup("");
 }
+
 /*
 int m_export(t_shell *shell)
 {

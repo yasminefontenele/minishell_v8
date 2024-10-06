@@ -6,7 +6,7 @@
 /*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 20:57:57 by yasmine           #+#    #+#             */
-/*   Updated: 2024/09/07 10:34:15 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/06 20:05:38 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int count_backslash(char *line, int i)
     return (count);
 }
 
-//Tcheck if the backslash is valid
+
 int valid_backslash(char **tokens)
 {
     int i;
@@ -40,12 +40,12 @@ int valid_backslash(char **tokens)
     if(tokens[++i])
     {
         j = -1;
-        q = quote_init();//initialize the quote structure
+        q = quote_init();
         while (tokens[i][++j])
         {
             if ((tokens[i][j] == '\\' && q.double_quote == false) && q.single_quote == false)
                 return (0);
-            if (tokens[i][j] == '\'' || tokens[i][j] == '\"')//if the token is a quote
+            if (tokens[i][j] == '\'' || tokens[i][j] == '\"')
                 q = quote_value(tokens[i][j], q);
         }
     }

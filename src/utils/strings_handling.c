@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   strings_handling.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emencova <emencova@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 11:31:24 by yasmine           #+#    #+#             */
-/*   Updated: 2024/09/10 16:26:05 by emencova         ###   ########.fr       */
+/*   Updated: 2024/10/06 20:16:39 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-//add a character to a string
 char *ft_stringjoin(char *str, char c)
 {
     int i;

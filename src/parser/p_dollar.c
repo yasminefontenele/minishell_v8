@@ -6,41 +6,14 @@
 /*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:21:10 by yfontene          #+#    #+#             */
-/*   Updated: 2024/09/29 12:43:31 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/06 19:52:29 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 #include "../exec/execute.h"
 
-//replaces the token with the corresponding value of the variable
-/*void dollar_replace(char **token, int i, t_shell *shell)
-{
-    printf("Chamando dollar_replace\n");
-    char *str;
-    char **sorted_env;
-
-    str = ft_strdup(*token);
-    printf("Expandindo variável: %s\n", str);
-    free(*token);
-    *token = NULL;
-    sorted_env = dup_array(shell->keys);
-    sort_array(sorted_env);
-    *token = find_env_value(str, i, sorted_env);
-    printf("Buscando pela variável: %s\n", str); // Debug print
-    if (*token == NULL)
-    {
-        printf("Valor da variável não encontrado.\n"); // Debug print
-        ft_error("error in dollar replace value", 1);
-    }
-    else
-    {
-        printf("Valor encontrado: %s\n", *token); // Debug print
-    }
-    free_str_array(sorted_env);
-}*/
-
-void dollar_replace(char **token, int i, t_shell *shell)
+void    dollar_replace(char **token, int i, t_shell *shell)
 {
     char *str = ft_strdup(*token);
     free(*token);
@@ -126,7 +99,6 @@ int	dollar_aux_config(t_tokens *token, int *i, t_data *data)
         dollar_replace(&(token->tokens[*i]), *i, data->shell);
 	else if ((token->tokens[*i][1] == '$' && *i) || (*i == 0 && token->tokens[*i][0] == '$'))
 	{
-      //  printf("Chamando dollar_aux_config para token: %s\n", token->tokens[*i]);
 		dollar_replace(&(token->tokens[*i]), *i, data->shell);
 		token->tokens = dollar_spaces_split(token->tokens, *i);
 		data->presence = 1;
@@ -145,29 +117,6 @@ int	dollar_aux_config(t_tokens *token, int *i, t_data *data)
 	}
 	return (0);
 }
-
-/*t_tokens    dollar_config(t_tokens *token)
-{
-    int     i;
-    t_data  data;
-
-    i = 0;
-    data.oldlen = count(token->tokens);
-    data.newlen = data.oldlen;
-    data.presence = 1;
-    while (data.presence)
-    {
-        data.presence = 0;
-        while (token->tokens[i])
-        {
-            if (dollar_aux_config(token, &i, &data) == 1)
-                break ;
-            i++;
-        }
-        token->nbr = i;
-    }
-    return (*token);
-}*/
 
 char *dollar_config(char *str, int pos, t_shell *shell)
 {
@@ -191,10 +140,4 @@ char *dollar_config(char *str, int pos, t_shell *shell)
     }
     return ft_strdup(str);
 }
-
-
-
-
-
-
 

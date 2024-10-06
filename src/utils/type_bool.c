@@ -6,13 +6,12 @@
 /*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:15:46 by yasmine           #+#    #+#             */
-/*   Updated: 2024/09/04 08:51:09 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/06 20:20:12 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-//This function checks if a string str is empty, if it contains only spaces or tabs.
 int is_empty(char *str)
 {
     int i;
@@ -27,7 +26,6 @@ int is_empty(char *str)
     return (1);
 }
 
-//This function checks if a token type is protected.
 int is_protected(int type)
 {
 	if (type == PROTECTED_DOLLAR || type == -PROTECTED_DOLLAR)

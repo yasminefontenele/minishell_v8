@@ -6,14 +6,13 @@
 /*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 20:08:35 by yasmine           #+#    #+#             */
-/*   Updated: 2024/09/23 16:26:03 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/06 20:06:50 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 #include "../exec/execute.h"
 
-//This function is used to format the environment variable
 char	*format_var(char *var, char *value)
 {
     char    *new_var;
@@ -34,7 +33,6 @@ char	*format_var(char *var, char *value)
     return (new_var);
 }
 
-//This function is used to add a new variable to the environment
 void new_var(char *var, char *value, t_shell *shell)
 {
     int    i;
@@ -50,11 +48,10 @@ void new_var(char *var, char *value, t_shell *shell)
     new_value = format_var(var, value);
     new_env[i] = ft_strdup(new_value);
     new_env[i + 1] = NULL;
-    free_str_array(shell->keys); //free the old environment
-    shell->keys = new_env; //assign the new environment
+    free_str_array(shell->keys);
+    shell->keys = new_env;
 }
 
-//This function is used to update the environment variable
 void update_env(char *var, char *value, t_shell *shell)
 {
     int i;
@@ -64,11 +61,11 @@ void update_env(char *var, char *value, t_shell *shell)
     var_len = ft_strlen(var);
     while (g_env.env[++i])
     {
-        if (ft_strncmp(var, g_env.env[i], var_len) == 0)//if the variable already exists
+        if (ft_strncmp(var, g_env.env[i], var_len) == 0)
         {
             env_update(var, value, shell);
             return ;
         }
     }
-    new_var(var, value, shell);//if the variable does not exist
+    new_var(var, value, shell);
 }

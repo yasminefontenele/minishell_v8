@@ -6,7 +6,7 @@
 /*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:25:30 by yfontene          #+#    #+#             */
-/*   Updated: 2024/09/23 18:26:38 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/06 19:51:43 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void    process_pipeline(char *line, t_shell *shell)
         sep.content = ft_split(line, '\0');
     else
         sep.content = separator_split(line, sep.separator_index, sep.nbr_separator);
-    free(sep.separator_index);
+    free (sep.separator_index);
     sep.separator_index = NULL;
     while (sep.content[i])
     {
@@ -36,23 +36,23 @@ void    process_pipeline(char *line, t_shell *shell)
     }
     if (error == 0)
         tokenize_commands(sep.content, &cmds_list, shell);
-    free(sep.content);
+    free (sep.content);
 }
 
-void	process_command_line(char *line, t_shell *shell)
+void    process_command_line(char *line, t_shell *shell)
 {
     t_separator semicolon_info;
     
-    if (ft_strlen(line) == 0)//if the line is empty, it will be ignored
+    if (ft_strlen(line) == 0)
     {
         free(line);
         line = NULL;
         return ;
     }
     semicolon_info = position_separator(line, ';');
-    if (semicolon_info.nbr_separator == 0)//if there is no semicolon, the line is processed as a pipeline
+    if (semicolon_info.nbr_separator == 0)
         process_pipeline(line, shell);
-    else if (semicolon_info.nbr_separator == 1)//if there is a semicolon, the line is split into two commands
+    else if (semicolon_info.nbr_separator == 1)
     {
         semicolon_info.content = ft_split(line, '\0');
         process_pipeline(semicolon_info.content[0], shell);
@@ -67,3 +67,4 @@ void	process_command_line(char *line, t_shell *shell)
     semicolon_info.separator_index = NULL;
     line = NULL;
 }
+

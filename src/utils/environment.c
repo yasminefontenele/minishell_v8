@@ -6,14 +6,13 @@
 /*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 08:50:14 by yfontene          #+#    #+#             */
-/*   Updated: 2024/09/23 19:00:34 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/06 20:15:28 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 #include "../exec/execute.h"
 
-//This function is used to duplicate the environment
 char **dup_array(char **env)
 {
     int i;
@@ -30,7 +29,6 @@ char **dup_array(char **env)
     return sorted;
 }
 
-//This function is used to sort the environment
 void sort_array(char **sorted)
 {
     int    i;
@@ -59,31 +57,6 @@ void sort_array(char **sorted)
     }
 }
 
-//This function is used to initialize the environment
-/*void env_init(char **env, t_shell *shell)
-{
-    int i;
-    char **sorted_env;
-
-    i = 0;
-    while(env[i])
-        i++;
-    shell->keys = malloc(sizeof(char *) * (i + 2));
-    if (shell->keys == NULL)
-        ft_error("malloc failed", 1);
-    i = -1;
-    shell->keys[++i] = ft_strdup("?=0");
-    while (env[++i])
-    {
-        shell->keys[i] = ft_strdup(env[i - 1]);
-        if (shell->keys[i] == NULL)
-            ft_error("malloc failed", 1);
-    }
-    shell->keys[i] = NULL;
-    sorted_env = dup_array(shell->keys);
-    sort_array(sorted_env);
-}*/
-
 void env_init(char **env, t_shell *shell)
 {
     int i;
@@ -108,9 +81,6 @@ void env_init(char **env, t_shell *shell)
     sort_array(sorted_env);
 }
 
-
-
-//adds a new environment variable to the g_env.env array
 void append_to_env(char *variable, char *value, int size, t_shell *shell)
 {
     int i;
@@ -136,3 +106,4 @@ void append_to_env(char *variable, char *value, int size, t_shell *shell)
     free_str_array(shell->keys);
     shell->keys = updated_env;
 }
+

@@ -6,13 +6,13 @@
 /*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 08:48:49 by yfontene          #+#    #+#             */
-/*   Updated: 2024/09/23 19:01:52 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/06 19:49:51 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-char *find_env_value(char *str, int i, char **sorted)
+char    *find_env_value(char *str, int i, char **sorted)
 {
     int     j;
     int     name_len;
@@ -36,6 +36,7 @@ char *find_env_value(char *str, int i, char **sorted)
     }
     return (ft_strdup(""));
 }
+
 
 
 

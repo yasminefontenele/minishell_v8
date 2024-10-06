@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 16:34:30 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/04 22:06:12 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/06 23:12:01 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -328,7 +328,12 @@ void cmd_execute(t_shell *shell, t_list *commands_list)
         write(STDERR_FILENO, "Error: No commands to execute\n", 31);
         return;
     }  
-    exec = commands_list->content; 
+    exec = commands_list->content;
+    int i = 0;
+    while (exec->args[i])
+    {
+        i++;
+    }
     if (is_invalid_var_assignment(exec->args[0]))
         return;     
     check = parse_redir(exec, exec->args);
@@ -347,3 +352,4 @@ void cmd_execute(t_shell *shell, t_list *commands_list)
             command_get_single(shell, commands_list);
     }
 }
+
