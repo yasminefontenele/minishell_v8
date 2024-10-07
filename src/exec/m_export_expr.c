@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_export_expr.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 08:08:44 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/06 23:03:43 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/04 16:56:27 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,27 +31,28 @@
     return str;
 }*/
 
-char *remove_quotes(char *token)
+char *remove_quotes(char *arg)
 {
-    int len = strlen(token);
- 
-   char *new_token = malloc(len + 1);  // Aloca espaço suficiente para o novo token
-    int i = 0, j = 0;
+    char *result;
+    int i;
+    int j;
 
-    // Remover aspas externas se houver
-    if ((token[0] == '\'' || token[0] == '"') && (token[len - 1] == token[0])) {
-        i++;  // Ignora a primeira aspa externa
-        len--;  // Ignora a última aspa externa
+    if (!arg)
+        return NULL;
+    result = malloc(strlen(arg) + 1);
+    if (!result)
+        return NULL;
+    i = 0;
+    j = 0;
+    while (arg[i])
+    {
+        if (arg[i] != '"' && arg[i] != '\'')
+            result[j++] = arg[i];
+        i++;
     }
+    result[j] = '\0';
 
-    // Copia o restante do token sem as aspas externas
-    while (i < len) {
-        new_token[j++] = token[i++];
-    }
-
-    new_token[j] = '\0';  // Finaliza a nova string
-
-    return new_token;
+    return result;
 }
 
 
@@ -103,7 +104,7 @@ char *remove_quotes(char *token)
      printf("apos split: var='%s', value='%s'\n", *var, *value);
 
 }*/
-//VALIDA
+
 void split_var_value(char *arg, char **var, char **value)
 {
     char *eq_pos;
@@ -117,11 +118,11 @@ void split_var_value(char *arg, char **var, char **value)
         return;
     }
     *var = ft_strndup(arg, eq_pos - arg);
-
-
     if (*(eq_pos + 1) != '\0')
     {
         *value = ft_strdup(eq_pos + 1);
+
+
         len = ft_strlen(*value);
         if (len >= 2 && ((*value)[0] == '"' && (*value)[len - 1] == '"'))
         {
@@ -137,7 +138,6 @@ void split_var_value(char *arg, char **var, char **value)
     else
         *value = ft_strdup("");
 }
-
 /*
 int m_export(t_shell *shell)
 {

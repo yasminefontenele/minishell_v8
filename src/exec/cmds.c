@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 16:34:30 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/06 23:12:01 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/07 00:08:50 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ static DIR *check_cmd(t_shell *shell, t_list *comnd, char ***str)
     return (directory);
 }
 
+/// LAST THAT WORKED !!!
 void command_get_single(t_shell *shell, t_list *comnd)
 {
     t_exec *node;
@@ -97,7 +98,7 @@ void command_get_single(t_shell *shell, t_list *comnd)
     if (directory)
     {
         closedir(directory);
-        m_error(ERR_ISDIR, node->args[0], 126);
+     //   m_error(ERR_ISDIR, node->args[0], 126);
         return ;
     }
     if (node->path && access(node->path, X_OK) == 0)
@@ -111,7 +112,7 @@ void command_get_single(t_shell *shell, t_list *comnd)
         else if (pid == 0)
         {
             execve(node->path, node->args, shell->keys);
-            m_error(ERR_ISDIR, node->args[0], 126);
+         //   m_error(ERR_ISDIR, node->args[0], 126);
             exit(126);
         }
         else
@@ -125,17 +126,20 @@ void command_get_single(t_shell *shell, t_list *comnd)
         m_error(ERR_NEWCMD, node->args[0], 126);
     free_form(&str);
 }
-
+/*
+ /// LAST PIPE THAT WORKS!!!!
 void command_get_pipeline(t_shell *shell, t_list *comnd)
 {
     t_exec *node;
     DIR *directory;
     char **str;
+    printf("entering get pipeline command \n");
 
     str = NULL;
     node = comnd->content;
     if (built_check(node))
     {
+        printf(" get pipeline builtin \n");
         pipe_builtin(shell, comnd, &g_env.exit_status, ft_strlen(node->args[0]));
         return;
     }
@@ -143,13 +147,14 @@ void command_get_pipeline(t_shell *shell, t_list *comnd)
     if (directory)
     {
         closedir(directory);
-        m_error(ERR_ISDIR, node->args[0], 126);
+       m_error(ERR_ISDIR, node->args[0], 126);
         return ;
     }
     if (node->path && access(node->path, X_OK) == 0)
     {
         if (execve(node->path, node->args, shell->keys) == -1)
         {
+            printf("get pipeline cmd execve\n");
             m_error(ERR_NEWCMD, node->args[0], 126);
             exit(126);
         }
@@ -158,7 +163,9 @@ void command_get_pipeline(t_shell *shell, t_list *comnd)
         m_error(ERR_NEWCMD, node->args[0], 127);
     free_form(&str);
 }
-/*
+
+
+
 void command_get_redir(t_shell *shell, t_list *comnd)
 {
     t_exec *node;
@@ -226,7 +233,55 @@ void command_get_redir(t_shell *shell, t_list *comnd)
         m_error(ERR_NEWCMD, node->args[0], 126);
         close(node->out);
 }
+
 */
+
+/// WORKS WITH unset USER | env | grep USER
+
+void command_get_pipeline(t_shell *shell, t_list *comnd)
+{
+    t_exec *node;
+    DIR *directory;
+    char **str;
+
+    str = NULL;
+    node = comnd->content;
+    if (ft_strcmp(node->args[0], "env") == 0)
+    {
+        m_env(shell, node->args);
+        return;
+    }
+
+    if (built_check(node))
+    {
+        pipe_builtin(shell, comnd, &g_env.exit_status, ft_strlen(node->args[0]));
+        return;
+    }
+
+    directory = check_cmd(shell, comnd, &str);
+    if (directory)
+    {
+        closedir(directory);
+        m_error(ERR_ISDIR, node->args[0], 126);
+        return;
+    }
+
+    if (node->path && access(node->path, X_OK) == 0)
+    {
+        if (execve(node->path, node->args, shell->keys) == -1)
+        {
+            m_error(ERR_NEWCMD, node->args[0], 126);
+            exit(126);
+        }
+    }
+    else
+        m_error(ERR_NEWCMD, node->args[0], 127);
+    free_form(&str);
+}
+
+
+/// WORKS LAST!!!!!!!!!!!
+
 void command_get_redir(t_shell *shell, t_list *comnd)
 {
     t_exec *node;
@@ -238,7 +293,8 @@ void command_get_redir(t_shell *shell, t_list *comnd)
 
     str = NULL;
     node = comnd->content;
-    original_stdout = dup(STDOUT_FILENO);
+    original_stdout = dup(STDOUT_FILENO); 
+    printf(" entering command get redir\n");
 
     if (built_check(node)) 
     {
@@ -250,7 +306,6 @@ void command_get_redir(t_shell *shell, t_list *comnd)
         close(node->out);
         return;
     }
-     // NOT SURE ABOUT THIS BELOW?? /
     directory = check_cmd(shell, comnd, &str);
     if (directory)
     {
@@ -270,9 +325,10 @@ void command_get_redir(t_shell *shell, t_list *comnd)
         {
             if (node->out != STDOUT_FILENO)
                 dup2(node->out, STDOUT_FILENO);
+            
             directory = check_cmd(shell, comnd, &str);
             execve(node->path, node->args, shell->keys);
-            m_error(ERR_ISDIR, node->args[0], 126);
+           // m_error(ERR_ISDIR, node->args[0], 126);
             exit(126);
         }
         else
@@ -289,34 +345,6 @@ void command_get_redir(t_shell *shell, t_list *comnd)
     close(node->out);
 }
 
-/*
-void cmd_execute(t_shell *shell, t_list *commands_list)
-{
-    int check;
-    t_exec *exec;
-    
-    check = 0;
-    exec = commands_list->content;
-    if (!commands_list)
-    {
-        write(STDERR_FILENO, "Error: No commands to execute\n", 31);
-        return;
-    }
-    if (is_invalid_var_assignment(exec->args[0]))
-        return; 
-   // exec = commands_list->content;
-    check = parse_redir(exec, exec->args);
-    if (check == 1)
-    {
-        command_get_redir(shell, commands_list);
-        return;
-    }   
-    else if (check == 0 && commands_list->next)
-        execute_pipeline(shell, commands_list);
-    else 
-        command_get_single(shell, commands_list);
-}
-*/
 
 void cmd_execute(t_shell *shell, t_list *commands_list)
 {
@@ -328,28 +356,30 @@ void cmd_execute(t_shell *shell, t_list *commands_list)
         write(STDERR_FILENO, "Error: No commands to execute\n", 31);
         return;
     }  
-    exec = commands_list->content;
-    int i = 0;
-    while (exec->args[i])
-    {
-        i++;
-    }
+    exec = commands_list->content; 
     if (is_invalid_var_assignment(exec->args[0]))
         return;     
     check = parse_redir(exec, exec->args);
     if (check == 1)
     {
+    //    printf("came back after parse redir and check == 1");
         command_get_redir(shell, commands_list);
         return;
+    }
+    if (check == 2)
+    {
+        // Here we handled a redirection, including a here-document
+    //    printf("came back after parse redir and check == 2, returning to prompt.\n");
+        return; // Ensure we return to the prompt without executing any command
     }
     else if (check == 0)
     {
         if (exec->out == -1 || exec->in == -1)
             return;
-        else if (commands_list->next)
-            execute_pipeline(shell, commands_list);
-         else
-            command_get_single(shell, commands_list);
+        else
+            if (commands_list->next)
+                execute_pipeline(shell, commands_list);
+            else
+                command_get_single(shell, commands_list);
     }
 }
-

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 14:57:57 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/05 09:49:46 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/07 00:25:37 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 # define ERR_MEM	10
 # define ERR_ISDIR	11
 # define ERR_NOTDIR	12
+# define ERR_EXECVE 13
+# define BUFFER_SIZE 1024
 
 # include <stdio.h>
 # include <readline/readline.h>
@@ -65,7 +67,7 @@ int 	m_unset(t_shell *shell);
 int m_export(t_shell *shell);
 int 	m_env(t_shell *shell, char **args);
 int 	m_expr(char **args);
-int 	create_here_document_fd(char *input_buffer[2], char *delimiter[2]);
+//int 	create_here_document_fd(char *input_buffer[2], char *delimiter[2]);
 int 	ft_charstr(const char *str, char *set);
 int		second_strchr(char *str, int c);
 int		second_atoi(const char *str, long *n);
@@ -93,8 +95,7 @@ int		open_fd(int fd, char *path, int is_output, int append);
 t_exec *outfile_one(t_exec *node, char **ags, int *len);
 t_exec *outfile_two(t_exec *node, char **ags, int *len);
 t_exec *infile_one(t_exec *node, char **ags, int *len);
-t_exec	*infile_two(t_exec *node, char **ags, int *len);
-//void init_exec(t_exec **exec, t_list *cmd_list);
+//t_exec	*infile_two(t_exec *node, char **ags, int *len);
 void error_cd(char **args, char *target_dir);
 char *ft_strndup(char *src, int n);
 void execute_pipeline(t_shell *shell, t_list *commands_list);
@@ -104,10 +105,13 @@ int pipe_builtin(t_shell *shell, t_list *cmd_ls, int *exit, int len);
 int parse_redir(t_exec *exec, char **args);
 int ft_str_is_space(char *line);
 int	m_echo(char **args);
+char *remove_quotes(char *str);
 int is_invalid_var_assignment(char *cmd);
 int is_valid_env_var(const char *var_name);
-char *remove_quotes(char *token);
+
 
 char *get_env_for_export(t_shell *shell, const char *var);
+int create_here_document_fd(char *input_buffer[2], char *delimiter[2]);
+void infile_two(t_exec *node, char **ags, int *len);
 
 #endif
