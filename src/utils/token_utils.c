@@ -6,7 +6,7 @@
 /*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:48:35 by yasmine           #+#    #+#             */
-/*   Updated: 2024/10/06 22:24:27 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/07 13:57:35 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@ int count_token(char *line)
 
     while (line[i])
     {
-        i = skip_space(line, i);
+        if (line[i])
+            i = skip_space(line, i);
         if (line[i] == '\'' || line[i] == '\"')
         {
             int quote_end = token_quotes_end(line, i);
@@ -57,12 +58,15 @@ int count_token(char *line)
                 return -1;
             i = quote_end + 1;
         }
+        if (line[i] == '<' && line[i+1] == '<')
+            i += 2;
         else
         {
             while (line[i] && !isspace(line[i]) && line[i] != '>' && line[i] != '<')
                 i++;
         }
         count++;
+        i++;
     }
     return count;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_export_expr.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 08:08:44 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/04 16:56:27 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/07 13:56:55 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,28 +31,24 @@
     return str;
 }*/
 
-char *remove_quotes(char *arg)
+char *remove_quotes(char *token)
 {
-    char *result;
-    int i;
-    int j;
+    int len = strlen(token);
+ 
+    char *new_token = malloc(len + 1);
+    int i = 0, j = 0;
 
-    if (!arg)
-        return NULL;
-    result = malloc(strlen(arg) + 1);
-    if (!result)
-        return NULL;
-    i = 0;
-    j = 0;
-    while (arg[i])
-    {
-        if (arg[i] != '"' && arg[i] != '\'')
-            result[j++] = arg[i];
+    if ((token[0] == '\'' || token[0] == '"') && (token[len - 1] == token[0])) {
         i++;
+        len--; 
     }
-    result[j] = '\0';
 
-    return result;
+    while (i < len) 
+        new_token[j++] = token[i++];
+
+    new_token[j] = '\0';
+
+    return new_token;
 }
 
 
