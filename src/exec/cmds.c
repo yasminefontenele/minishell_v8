@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 16:34:30 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/07 16:24:41 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/07 20:46:47 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,6 @@ void command_get_redir(t_shell *shell, t_list *comnd)
     str = NULL;
     node = comnd->content;
     original_stdout = dup(STDOUT_FILENO); 
-    printf(" entering command get redir\n");
 
     if (built_check(node)) 
     {

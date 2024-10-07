@@ -6,7 +6,7 @@
 /*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 11:47:09 by yfontene          #+#    #+#             */
-/*   Updated: 2024/10/07 13:55:16 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/07 20:37:11 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,15 +125,16 @@ void filler_stokens(char **cmds, t_tokens **token, int nbr, t_shell *shell)
         free((*token)[i].tokens[j - 1]);
         (*token)[i].tokens[j - 2] = temp;
         (*token)[i].tokens[j - 1] = NULL;
+        free(temp);
     }
     (*token)[i].tokens[j] = NULL;
 }
 
 char **lst_to_array(t_list *list)
 {
-    int size;
-    char **array;
-    int i;
+    int size;//size of the list
+    char **array;//array of strings
+    int i;//    
 
     size = ft_lstsize(list);
     array = malloc(sizeof(char *) * (size + 1));
@@ -158,6 +159,7 @@ char **split_command_line(char *line)
     bool in_quotes = false;
     char quote_type = '\0';
     t_list *cmd_list = NULL;
+    char *cmd;
 
     while (line[i])
     {
@@ -177,7 +179,7 @@ char **split_command_line(char *line)
         }
         if (line[i] == '|' && !in_quotes)
         {
-            char *cmd = ft_substr(line, start, i - start);
+            cmd = ft_substr(line, start, i - start);
             cmd = remove_quotes(cmd);
             ft_lstadd_back(&cmd_list, ft_lstnew(cmd));
             start = i + 1;
@@ -186,7 +188,7 @@ char **split_command_line(char *line)
     }
     if (start < i)
     {
-        char *cmd = ft_substr(line, start, i - start);
+        cmd = ft_substr(line, start, i - start);
         cmd = remove_quotes(cmd);
         ft_lstadd_back(&cmd_list, ft_lstnew(cmd));
     }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 15:16:06 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/07 16:34:19 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/07 20:09:04 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,13 @@ void set_env_ex(t_shell *shell, char *var_name, char *value)
 {
     int index;
     char *new_entry;
+	char *tmp;
 
-    new_entry = ft_strjoin(var_name, "=");
-    new_entry = ft_strjoin(new_entry, value);
+    tmp = ft_strjoin(var_name, "=");
+	if(!tmp)
+		ft_error("Malloc failed in set_env_ex", 1);
+    new_entry = ft_strjoin(tmp, value);
+	free(tmp);
     index = find_key_idx(shell->keys, var_name);
     if (index != -1)
     {

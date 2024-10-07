@@ -6,7 +6,7 @@
 /*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:11:10 by yfontene          #+#    #+#             */
-/*   Updated: 2024/10/07 13:55:35 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/07 20:21:23 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ char *parse_next_token(char *line, int reset, int keep_quotes)
     int start = 0;
     int end = 0;
     char quote_char;
-    char *get_result;
 
     if (reset == 0)
         current_pos = 0;
@@ -109,9 +108,7 @@ char *parse_next_token(char *line, int reset, int keep_quotes)
             start--;
             end++;
         }
-        get_result = malloc(sizeof(char) * (end - start + 1));
-        get_result = extract_substring(line, start, end);
-        return (get_result);
+        return (extract_substring(line, start, end));
     }
     else if (line[current_pos] == '>' || line[current_pos] == '<')
     {
@@ -119,9 +116,7 @@ char *parse_next_token(char *line, int reset, int keep_quotes)
         if (line[current_pos] == line[start])
             current_pos++;
         end = current_pos;
-        get_result = malloc(sizeof(char) * (end - start + 1));
-        get_result = extract_substring(line, start, end);
-        return (get_result);
+        return (extract_substring(line, start, end));
     }
     else
     {
@@ -133,9 +128,7 @@ char *parse_next_token(char *line, int reset, int keep_quotes)
             current_pos++;
         }
         end = current_pos;
-        get_result = malloc(sizeof(char) * (end - start + 1));
-        get_result = extract_substring(line, start, end);
-        return (get_result);
+        return (extract_substring(line, start, end));
     }
     return (NULL);
 }
