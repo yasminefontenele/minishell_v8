@@ -6,7 +6,7 @@
 /*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 08:59:10 by yfontene          #+#    #+#             */
-/*   Updated: 2024/10/06 19:54:05 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/07 14:08:23 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,14 +110,11 @@ void exec_process_quotes(t_tokens *tokens, t_shell *shell)
 
 bool valid_quotes(const char *str)
 {
-    char quote_type;
-    bool in_quotes;
-    int i;
+    char quote_type = '\0';
+    bool in_quotes = false;
+    int i = 0;
 
-    quote_type = '\0';
-    in_quotes = false;
-    i = 0;
-    while (str[i++])
+    while (str[i])
     {
         if ((str[i] == '"' || str[i] == '\'') && (quote_type == '\0' || quote_type == str[i]))
         {
@@ -132,9 +129,11 @@ bool valid_quotes(const char *str)
                 quote_type = '\0';
             }
         }
+        i++;
     }
     if (in_quotes)
         return false;
+    
     return true;
 }
 
