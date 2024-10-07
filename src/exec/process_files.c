@@ -6,7 +6,7 @@
 /*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 17:25:13 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/07 00:29:03 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/07 16:30:36 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,9 +107,9 @@ int handle_here_document(char *delimiter, t_exec *exec)
 {
     char *line;
     int fd;
-    char *temp_file = ".heredoc_temp"; // Temporary file to store here-document content
+    char *temp_file = ".heredoc_temp";
 
-    fd = open(temp_file, O_RDWR | O_CREAT | O_TRUNC, 0600); // Open temp file
+    fd = open(temp_file, O_RDWR | O_CREAT | O_TRUNC, 0600);
     if (fd == -1)
     {
         perror("Error opening temporary file for here-document");
@@ -118,48 +118,42 @@ int handle_here_document(char *delimiter, t_exec *exec)
 
     while (1)
     {
-        line = readline("> "); // Prompt for input
-        if (!line || ft_strcmp(line, delimiter) == 0) // End when delimiter is found
+        line = readline("> ");
+        if (!line || ft_strcmp(line, delimiter) == 0)
             break;
         write(fd, line, ft_strlen(line));
-        write(fd, "\n", 1); // Add a newline after each line
+        write(fd, "\n", 1);
         free(line);
     }
     free(line);
     close(fd);
 
-    fd = open(temp_file, O_RDONLY); // Reopen the file for reading
+    fd = open(temp_file, O_RDONLY);
     if (fd == -1)
     {
         perror("Error reopening temporary file for here-document");
         return (-1);
     }
-    exec->in = fd; // Redirect input from the temporary file
+    exec->in = fd;
     return (1);
 }
 
-
-// Function to read the here-document
 char *read_here_document(char *input_buffer[2], size_t limit_length, char *end_marker, char *error_message)
 {
     char *temp;
-    size_t line_count = 0; // To count the number of lines
+    size_t line_count;
 
-    while (g_env.exit_status != 130 && (input_buffer[0] == NULL
+    line_count = 0;
+    while (g_exit_status != 130 && (input_buffer[0] == NULL
         || ft_strncmp(input_buffer[0], end_marker, limit_length) != 0 
         || ft_strlen(end_marker) != limit_length))
     {
-        // Read input from the user
         input_buffer[0] = readline("> ");
-        
-        // Handle EOF case
         if (input_buffer[0] == NULL)
         {
             printf("%s (wanted `%s`)\n", error_message, end_marker);
             break;
         }
-
-        // Count the line and append to the input buffer
         line_count++;
         temp = input_buffer[1];
         input_buffer[1] = ft_strjoin(input_buffer[1], input_buffer[0]);
@@ -167,61 +161,45 @@ char *read_here_document(char *input_buffer[2], size_t limit_length, char *end_m
         temp = ft_strjoin(input_buffer[1], "\n");
         free(input_buffer[1]);
         input_buffer[1] = temp;
-
-        // Free input_buffer[0]
         free(input_buffer[0]);
-        input_buffer[0] = NULL; // Reset for next input
+        input_buffer[0] = NULL;
     }
-
-    // Print the number of lines read
     if (line_count > 0)
-    {
-        printf("Here-document contains %zu lines.\n", line_count);
-    }
-    
-    return input_buffer[1];
+        printf("Here-document contains %zu lines.\n", line_count); 
+    return (input_buffer[1]);
 }
 
-// Function to create a pipe for the here-document
 int create_here_document_fd(char *input_buffer[2], char *delimiter[2])
 {
     int fd[2];
 
-    g_env.exit_status = 0;
-
-    // Create a pipe
+    g_exit_status = 0;
     if (pipe(fd) == -1)
     {
         m_perror(PIPE_READ, NULL, 1);
         return (-1);
     }
-
-    // Read here-document into input_buffer[1]
     input_buffer[1] = read_here_document(input_buffer, 0, delimiter[0], delimiter[1]);
-
-    // Check for empty input
     if (input_buffer[1] == NULL || ft_strlen(input_buffer[1]) == 0)
     {
         close(fd[PIPE_READ]);
         close(fd[PIPE_WRITE]);
         return (-1);
     }
-
-    // Write the content of the here-document to the pipe
     write(fd[PIPE_WRITE], input_buffer[1], ft_strlen(input_buffer[1]));
     free(input_buffer[1]);
-    close(fd[PIPE_WRITE]); // Close write end
-
-    // Check for exit status indicating cancellation (Ctrl+C)
-    if (g_env.exit_status == 130)
+    close(fd[PIPE_WRITE]);
+    if (g_exit_status == 130)
     {
         close(fd[PIPE_READ]);
         return (-1);
     }
-
-    return fd[PIPE_READ]; // Return the read end of the pipe
+    return (fd[PIPE_READ]);
 }
 
+
+
+ //WORKED LAST!!!!
 int parse_redir(t_exec *exec, char **args)
 {
     int i;
@@ -293,7 +271,7 @@ int parse_redir(t_exec *exec, char **args)
             }
             args[i] = NULL;
             args[i + 1] = NULL;
-            return (2); // Indicate a successful here-document processing
+            return (2);
         }
         /*
         else if (ft_strcmp(args[i], "<<") == 0)
@@ -311,15 +289,15 @@ int parse_redir(t_exec *exec, char **args)
             if (exec->in == -1)
                 return (0);
             return (2); // Indicate a successful here-document processing
-        }*/
+        } */
         i++;
     }
     return (0);
 }
 
 
-
 /*
+
 //// LAST THAT WORKS
 int parse_redir(t_exec *exec, char **args)
 {
@@ -373,8 +351,8 @@ int parse_redir(t_exec *exec, char **args)
                 return (0);
             }
             exec = infile_one(exec, args, &i);
-            if (exec->in == -1)
-                return (0);
+           // if (exec->in == -1)
+               // return (0);
             return (1);
         }
         else if (ft_strcmp(args[i], "<<") == 0)

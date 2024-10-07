@@ -6,7 +6,7 @@
 /*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 15:15:09 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/04 15:51:02 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/07 16:29:42 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,20 @@ int m_cd(t_shell *shell)
     char    *current_dir;
     char    *target_dir;
 
-    g_env.exit_status = 0;
+   g_exit_status = 0;
     args = ((t_exec *)shell->cmds->content)->args;
     if (args[1] && args[2])
     {
         ft_putstr_fd("cd: too many arguments\n", 2);
-        g_env.exit_status = 1;
-        return (g_env.exit_status);
+        g_exit_status = 1;
+        return (g_exit_status);
     }
     home_dir = get_env("HOME", shell->keys, 4);
     if (!home_dir)
     {
         ft_putstr_fd("minishell: cd: HOME not set\n", 2);
-        g_env.exit_status = 1;
-        return g_env.exit_status;
+        g_exit_status = 1;
+        return (g_exit_status);
     }
     if (!args[1] || ft_strcmp(args[1], "") == 0)
     {
@@ -44,15 +44,15 @@ int m_cd(t_shell *shell)
         if (!target_dir)
         {
             ft_putstr_fd("minishell: cd: OLDPWD not set\n", 2);
-            g_env.exit_status = 1;
+            g_exit_status = 1;
             free(home_dir);
-            return g_env.exit_status;
+            return (g_exit_status);
         }
     }
     else
         target_dir = ft_strdup(args[1]);
     error_cd(args, target_dir);
-    if (!g_env.exit_status)
+    if (!g_exit_status)
     {
         current_dir = getcwd(NULL, 1024);
         if (current_dir)
@@ -65,7 +65,7 @@ int m_cd(t_shell *shell)
 
     free(home_dir);
     free(target_dir);
-    return g_env.exit_status;
+    return (g_exit_status);
 }
 
 int	m_pwd(void)

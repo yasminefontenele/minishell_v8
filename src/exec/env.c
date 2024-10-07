@@ -6,7 +6,7 @@
 /*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 15:16:06 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/03 00:25:52 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/07 16:34:19 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,25 +47,16 @@ void set_env_ex(t_shell *shell, char *var_name, char *value)
     int index;
     char *new_entry;
 
-    // Construct the new variable (VAR=value)
     new_entry = ft_strjoin(var_name, "=");
     new_entry = ft_strjoin(new_entry, value);
-
-    // Check if it already exists in the environment
     index = find_key_idx(shell->keys, var_name);
-
     if (index != -1)
     {
-        // Update existing variable
         free(shell->keys[index]);
         shell->keys[index] = ft_strdup(new_entry);
     }
     else
-    {
-        // Add new variable to the environment array
         shell->keys = extend_form(shell->keys, new_entry);
-    }
-
     free(new_entry);
 }
 
@@ -75,22 +66,22 @@ char *get_env_for_export(t_shell *shell, const char *var)
     char *env_var;
     char *env_value;
 
+	i = 0;
     if (!var || !*var)
         return NULL;
-
-    // Loop through the shell's environment variables
-    for (i = 0; shell->keys[i]; i++)
+    while (shell->keys[i])
     {
-        env_var = ft_strjoin(var, "=");  // Create "VAR=" format for comparison
+        env_var = ft_strjoin(var, "=");
         if (ft_strncmp(shell->keys[i], env_var, ft_strlen(env_var)) == 0)
         {
-            env_value = shell->keys[i] + ft_strlen(env_var);  // Extract value after '='
-            free(env_var);  // Free the temporary string
-            return ft_strdup(env_value);  // Return a copy of the value
+            env_value = shell->keys[i] + ft_strlen(env_var);
+            free(env_var);
+            return ft_strdup(env_value);
         }
         free(env_var);
+		i++;
     }
-    return NULL;  // Return NULL if the variable is not found
+    return (NULL);
 }
 
 

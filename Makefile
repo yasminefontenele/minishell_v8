@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+         #
+#    By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/12 11:06:25 by yasmine           #+#    #+#              #
-#    Updated: 2024/10/06 20:32:39 by yfontene         ###   ########.fr        #
+#    Updated: 2024/10/07 16:25:59 by eliskam          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,13 +37,8 @@ PARSER_SRCS=			./src/parser/env_variable.c\
 						main.c
 						
 UTILS_SRCS=				./src/utils/backslash.c\
-						./src/utils/builtin_export_utils.c\
-						./src/utils/builtin_export_utils_error.c\
-						./src/utils/create_env.c\
 						./src/utils/dollar.c\
-						./src/utils/env_handling.c\
 						./src/utils/environment.c\
-						./src/utils/environmente_set.c\
 						./src/utils/erros.c\
 						./src/utils/free.c\
 						./src/utils/math.c\
@@ -58,7 +53,6 @@ UTILS_SRCS=				./src/utils/backslash.c\
 						./src/exec/get_next_line.c\
 						./src/exec/get_next_line_utils.c\
 						./src/exec/m_cd_pwd_echo.c\
-						./src/exec/cmd_output.c\
 						./src/exec/error.c\
 						./src/exec/exec.c\
 						./src/exec/exit.c\
@@ -68,7 +62,6 @@ UTILS_SRCS=				./src/utils/backslash.c\
 						./src/exec/utils_builtin.c\
 						./src/exec/utils_form.c\
 						./src/exec/env.c\
-						./src/exec/custom.c\
 						./src/exec/m_export_expr.c\
 						
 

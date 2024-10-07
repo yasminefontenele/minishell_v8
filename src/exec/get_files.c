@@ -6,7 +6,7 @@
 /*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 17:23:23 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/07 00:10:40 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/07 16:28:43 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ t_exec *outfile_one(t_exec *node, char **ags, int *len)
         if (node->out == -1)
 		{
             ft_putendl_fd(error_msg, 2);
-            g_env.exit_status = 1;
+            g_exit_status = 1;
             *len = -1;
             return (node);
         }
@@ -122,7 +122,7 @@ t_exec *outfile_one(t_exec *node, char **ags, int *len)
 	else
 	{
         ft_putendl_fd(error_msg, 2);
-        g_env.exit_status = 2;
+        g_exit_status = 2;
         *len = -1;
     }
 	 return (node);
@@ -141,7 +141,7 @@ t_exec *outfile_two(t_exec *node, char **ags, int *len)
 	{
         *len = -1;
         ft_putendl_fd(new_line, 2);
-        g_env.exit_status = 2;
+        g_exit_status = 2;
     }
     return (node);
 }
@@ -183,14 +183,14 @@ t_exec *infile_one(t_exec *node, char **ags, int *len)
     {
         ft_putendl_fd(new_line, 2);
         node->in = -1;
-        g_env.exit_status = 1;
+        g_exit_status = 1;
         return (node);
     }
     node->in = open_fd(node->in, ags[*len], 0, 0);
     if (node->in == -1) 
     {
        // perror("Error opening input file");
-        g_env.exit_status = 1;
+        g_exit_status = 1;
     }
     else
     {
@@ -213,25 +213,19 @@ void infile_two(t_exec *node, char **ags, int *len)
     deli[0] = NULL;
     deli[1] = "warning: here-document delimited by end-of-file";
     (*len)++;
-
-    // Check if the incremented len is within bounds
-    if (ags[*len]) // This should check the next argument
+    if (ags[*len])
     {
         deli[0] = ags[*len];
        // printf("Before create here document node in is %d\n", node->in);
         node->in = create_here_document_fd(input, deli);
       //  printf("Node in is %d\n", node->in);
-        return; // Simply return after processing
+        return;
     }
-
-    // Handle case where there's no delimiter or an error occurs
     if (!ags[*len] || node->in == -1)
     {
         *len = -1;
         if (node->in != -1)
-        {
-            g_env.exit_status = 2;
-        }
+            g_exit_status = 2;
     }
 }
 

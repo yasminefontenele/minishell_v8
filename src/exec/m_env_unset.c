@@ -6,7 +6,7 @@
 /*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 15:15:49 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/05 11:46:52 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/07 14:24:41 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,6 +227,12 @@ int m_unset(t_shell *shell)
 
     while (av[i])
     {
+        if (av[i][0] == '-')
+        {
+            printf("unset: invalid option -- '%s'\n", av[i]);
+            i++;
+            return (0);
+        }
         index = find_key_idx(shell->keys, av[i]);
         if (index != -1)
         {

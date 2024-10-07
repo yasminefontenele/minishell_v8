@@ -6,7 +6,7 @@
 /*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 14:57:57 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/07 00:25:37 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/07 16:38:45 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,6 @@
 # include "../../libft/libft.h"
 # include "../../minishell.h"
 
-
-
 typedef struct s_exec
 {
 	char	**args; // args for command
@@ -59,7 +57,6 @@ int		builtin(t_shell *shell, t_list *cmd_ls, int *e_xit, int len);
 int		built_check(t_exec *cmd);
 int		m_cd(t_shell *shell);
 int		m_pwd();
-//int		m_echo(char **args,t_shell *shell);
 int		error_unset(char *av);
 int		m_exit(t_shell *shell, t_list *cmd, int *leave);
 int 	find_key_idx(char **keys, char *key);
@@ -67,7 +64,6 @@ int 	m_unset(t_shell *shell);
 int m_export(t_shell *shell);
 int 	m_env(t_shell *shell, char **args);
 int 	m_expr(char **args);
-//int 	create_here_document_fd(char *input_buffer[2], char *delimiter[2]);
 int 	ft_charstr(const char *str, char *set);
 int		second_strchr(char *str, int c);
 int		second_atoi(const char *str, long *n);
@@ -88,14 +84,12 @@ char	*get_next_line(int fd);
 char	**set_env(char *str, char *val, char **keys, int nbr);
 char	*get_env(char *name, char **env, int name_len);
 void	set_env_ex(t_shell *shell, char *var_name, char *value);
-
 void	sigint_handler(int sig);
 void	ft_exec(char ***out, char *full, char *ags, char **env);
 int		open_fd(int fd, char *path, int is_output, int append);
 t_exec *outfile_one(t_exec *node, char **ags, int *len);
 t_exec *outfile_two(t_exec *node, char **ags, int *len);
 t_exec *infile_one(t_exec *node, char **ags, int *len);
-//t_exec	*infile_two(t_exec *node, char **ags, int *len);
 void error_cd(char **args, char *target_dir);
 char *ft_strndup(char *src, int n);
 void execute_pipeline(t_shell *shell, t_list *commands_list);
@@ -108,8 +102,7 @@ int	m_echo(char **args);
 char *remove_quotes(char *str);
 int is_invalid_var_assignment(char *cmd);
 int is_valid_env_var(const char *var_name);
-
-
+char *cmd_find(char **path_env, char *comnd, char *path_full);
 char *get_env_for_export(t_shell *shell, const char *var);
 int create_here_document_fd(char *input_buffer[2], char *delimiter[2]);
 void infile_two(t_exec *node, char **ags, int *len);

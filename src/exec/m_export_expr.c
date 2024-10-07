@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_export_expr.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 08:08:44 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/07 13:56:55 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/07 16:30:13 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 
 char *remove_quotes(char *token)
 {
-    int len = strlen(token);
+    int len = ft_strlen(token);
  
     char *new_token = malloc(len + 1);
     int i = 0, j = 0;
@@ -48,7 +48,7 @@ char *remove_quotes(char *token)
 
     new_token[j] = '\0';
 
-    return new_token;
+    return (new_token);
 }
 
 
@@ -106,7 +106,7 @@ void split_var_value(char *arg, char **var, char **value)
     char *eq_pos;
     size_t len;
 
-    eq_pos = strchr(arg, '=');
+    eq_pos = ft_strchr(arg, '=');
     if (!eq_pos)
     {
         *var = NULL;

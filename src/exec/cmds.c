@@ -6,37 +6,13 @@
 /*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 16:34:30 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/07 00:08:50 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/07 16:24:41 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 #include "../../minishell.h"
 #include <dirent.h>
-
-static char *cmd_find(char **path_env, char *comnd, char *path_full)
-{
-    char *tmp;
-    int i;
-
-    i = -1;
-    path_full = NULL;
-    while (path_env && path_env[++i])
-    {
-        tmp = ft_strjoin(path_env[i], "/");
-        if (!tmp)
-            return (NULL);
-        path_full = ft_strjoin(tmp, comnd);
-        free(tmp);
-        if (!path_full)
-            return (NULL);
-        if (access(path_full, F_OK) == 0)
-            return (path_full);
-        free(path_full);
-        path_full = NULL;
-    }
-    return (NULL);
-}
 
 
 static DIR *check_cmd(t_shell *shell, t_list *comnd, char ***str)
@@ -68,7 +44,7 @@ static DIR *check_cmd(t_shell *shell, t_list *comnd, char ***str)
     return (directory);
 }
 
-/// LAST THAT WORKED !!!
+/// LAST THAT WORKED !!
 void command_get_single(t_shell *shell, t_list *comnd)
 {
     t_exec *node;
@@ -76,132 +52,33 @@ void command_get_single(t_shell *shell, t_list *comnd)
     char **str;
     pid_t pid;
     int status;
+    int i;
+    char *temp;
 
     str = NULL;
     node = comnd->content;
-    
     if (built_check(node))
     {
-        builtin(shell, comnd, &g_env.exit_status, ft_strlen(node->args[0]));
+        builtin(shell, comnd, &g_exit_status, ft_strlen(node->args[0]));
         return ;
     }
-    for (int i = 0; node->args[i]; i++)
+    i = 0;
+    while (node->args[i])
     {
-       char *temp = remove_quotes(node->args[i]);
+       temp = remove_quotes(node->args[i]);
        if (temp)
         {
-            free(node->args[i]); // Libera o antigo argumento
-            node->args[i] = temp; // Atribui o novo argumento
-        }
-    }
-    directory = check_cmd(shell, comnd, &str);
-    if (directory)
-    {
-        closedir(directory);
-     //   m_error(ERR_ISDIR, node->args[0], 126);
-        return ;
-    }
-    if (node->path && access(node->path, X_OK) == 0)
-    {
-        pid = fork();
-        if (pid < 0)
-        {
-            m_error(ERR_FORK, "Fork failed", 1);
-            return ;
-        }
-        else if (pid == 0)
-        {
-            execve(node->path, node->args, shell->keys);
-         //   m_error(ERR_ISDIR, node->args[0], 126);
-            exit(126);
-        }
-        else
-        {
-            waitpid(pid, &status, 0);
-            if (WIFEXITED(status))
-                g_env.exit_status = WEXITSTATUS(status);
-        }
-    }
-    else
-        m_error(ERR_NEWCMD, node->args[0], 126);
-    free_form(&str);
-}
-/*
- /// LAST PIPE THAT WORKS!!!!
-void command_get_pipeline(t_shell *shell, t_list *comnd)
-{
-    t_exec *node;
-    DIR *directory;
-    char **str;
-    printf("entering get pipeline command \n");
-
-    str = NULL;
-    node = comnd->content;
-    if (built_check(node))
-    {
-        printf(" get pipeline builtin \n");
-        pipe_builtin(shell, comnd, &g_env.exit_status, ft_strlen(node->args[0]));
-        return;
-    }
-    directory = check_cmd(shell, comnd, &str);
-    if (directory)
-    {
-        closedir(directory);
-       m_error(ERR_ISDIR, node->args[0], 126);
-        return ;
-    }
-    if (node->path && access(node->path, X_OK) == 0)
-    {
-        if (execve(node->path, node->args, shell->keys) == -1)
-        {
-            printf("get pipeline cmd execve\n");
-            m_error(ERR_NEWCMD, node->args[0], 126);
-            exit(126);
-        }
-    }
-    else
-        m_error(ERR_NEWCMD, node->args[0], 127);
-    free_form(&str);
-}
-
-
-
-void command_get_redir(t_shell *shell, t_list *comnd)
-{
-    t_exec *node;
-    DIR *directory;
-  //  char **str;
-    pid_t pid;
-    int status;
-    int original_stdout;
-
-   // str = NULL;
-    node = comnd->content;  
-    if (built_check(node)) 
-    {
-        original_stdout = dup(STDOUT_FILENO);
-        dup2(node->out, STDOUT_FILENO);
-        pipe_builtin(shell, comnd, &g_env.exit_status, ft_strlen(node->args[0]));
-        close(node->out);
-        dup2(original_stdout, STDOUT_FILENO);
-        close(original_stdout);
-         return;
-    }
-    directory = check_cmd(shell, comnd, &str);
-    if (directory)
-    {
-        closedir(directory);
-        m_error(ERR_ISDIR, node->args[0], 126);
-        return ;
-    }
-    for (int i = 0; node->args[i]; i++) {
-        char *temp = remove_quotes(node->args[i]);
-        if (temp) {
-            free(node->args[i]); 
+            free(node->args[i]);
             node->args[i] = temp;
         }
+        i++;
     }
-    
+    directory = check_cmd(shell, comnd, &str);
+    if (directory)
+    {
+        closedir(directory);
+        return ;
+    }
     if (node->path && access(node->path, X_OK) == 0)
     {
         pid = fork();
@@ -212,29 +89,22 @@ void command_get_redir(t_shell *shell, t_list *comnd)
         }
         else if (pid == 0)
         {
-            int original_stdout = dup(STDOUT_FILENO);
-            dup2(node->out, STDOUT_FILENO);
-            directory = check_cmd(shell, comnd, &str);
             execve(node->path, node->args, shell->keys);
-            int original_stdout = dup(STDOUT_FILENO);
-             dup2(node->out, STDOUT_FILENO);
-                directory = check_cmd(shell, comnd, &str);
-            m_error(ERR_ISDIR, node->args[0], 126);
             exit(126);
         }
         else
         {
             waitpid(pid, &status, 0);
             if (WIFEXITED(status))
-                g_env.exit_status = WEXITSTATUS(status);
+                g_exit_status = WEXITSTATUS(status);
         }
     }
     else
         m_error(ERR_NEWCMD, node->args[0], 126);
-        close(node->out);
+    free_form(&str);
 }
 
-*/
+
 
 /// WORKS WITH unset USER | env | grep USER
 
@@ -254,10 +124,9 @@ void command_get_pipeline(t_shell *shell, t_list *comnd)
 
     if (built_check(node))
     {
-        pipe_builtin(shell, comnd, &g_env.exit_status, ft_strlen(node->args[0]));
+        pipe_builtin(shell, comnd, &g_exit_status, ft_strlen(node->args[0]));
         return;
     }
-
     directory = check_cmd(shell, comnd, &str);
     if (directory)
     {
@@ -265,7 +134,6 @@ void command_get_pipeline(t_shell *shell, t_list *comnd)
         m_error(ERR_ISDIR, node->args[0], 126);
         return;
     }
-
     if (node->path && access(node->path, X_OK) == 0)
     {
         if (execve(node->path, node->args, shell->keys) == -1)
@@ -300,7 +168,7 @@ void command_get_redir(t_shell *shell, t_list *comnd)
     {
         if (node->out != STDOUT_FILENO)
             dup2(node->out, STDOUT_FILENO);
-        pipe_builtin(shell, comnd, &g_env.exit_status, ft_strlen(node->args[0]));
+        pipe_builtin(shell, comnd, &g_exit_status, ft_strlen(node->args[0]));
         dup2(original_stdout, STDOUT_FILENO);
         close(original_stdout);
         close(node->out);
@@ -335,7 +203,7 @@ void command_get_redir(t_shell *shell, t_list *comnd)
         {
             waitpid(pid, &status, 0);
             if (WIFEXITED(status))
-                g_env.exit_status = WEXITSTATUS(status);
+                g_exit_status = WEXITSTATUS(status);
             dup2(original_stdout, STDOUT_FILENO);
             close(original_stdout);
         }
@@ -362,16 +230,11 @@ void cmd_execute(t_shell *shell, t_list *commands_list)
     check = parse_redir(exec, exec->args);
     if (check == 1)
     {
-    //    printf("came back after parse redir and check == 1");
         command_get_redir(shell, commands_list);
         return;
     }
     if (check == 2)
-    {
-        // Here we handled a redirection, including a here-document
-    //    printf("came back after parse redir and check == 2, returning to prompt.\n");
-        return; // Ensure we return to the prompt without executing any command
-    }
+        return;
     else if (check == 0)
     {
         if (exec->out == -1 || exec->in == -1)

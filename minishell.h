@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 19:48:13 by yasmine           #+#    #+#             */
-/*   Updated: 2024/10/05 20:18:40 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/07 16:40:09 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <fcntl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+
 //# include "./src/exec/execute.h"
 
 # define GREEN      "\033[0;32m"
@@ -89,7 +90,7 @@ typedef struct s_separator
 }						t_separator;
 
 
-extern t_env					g_env;//global variable to store the environment variables and the exit status of the last command executed.
+extern int					g_exit_status;//global variable to store the environment variables and the exit status of the last command executed.
 
 /*
 										***** TO DO ******

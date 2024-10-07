@@ -6,7 +6,7 @@
 /*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 16:43:00 by emencova          #+#    #+#             */
-/*   Updated: 2024/09/30 23:03:49 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/07 16:27:32 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void m_error(int error_type, char *limit, int status)
 		ft_putstr_fd("Is a directory: ", 2);
     ft_putstr_fd(limit, 2);
     ft_putstr_fd("\n", 2);
-    g_env.exit_status = status;
+    g_exit_status = status;
 }
 
 void error_cd(char **args, char *target_dir)
@@ -48,7 +48,7 @@ void error_cd(char **args, char *target_dir)
 
     if (!args[1] && (!target_dir || target_dir[0] == '\0'))
     {
-        g_env.exit_status = 1;
+        g_exit_status = 1;
         ft_putstr_fd("minishell: cd: HOME not set\n", 2);
         return;
     }
@@ -71,7 +71,7 @@ void error_cd(char **args, char *target_dir)
         if (chdir(args[1]) == -1)
         {
             perror("cd");
-            g_env.exit_status = 1;
+            g_exit_status = 1;
         }
         closedir(dir);
     }
@@ -80,7 +80,7 @@ void error_cd(char **args, char *target_dir)
         if (chdir(target_dir) == -1)
         {
             perror("cd");
-            g_env.exit_status = 1;
+            g_exit_status = 1;
         }
     }
 }

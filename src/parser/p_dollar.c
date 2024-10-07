@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   p_dollar.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:21:10 by yfontene          #+#    #+#             */
-/*   Updated: 2024/10/06 19:52:29 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/07 16:31:23 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void    dollar_replace(char **token, int i, t_shell *shell)
     free(*token);
     *token = NULL;
     if (str[i] == '$' && str[i + 1] == '?')
-        *token = ft_itoa(g_env.exit_status);
+        *token = ft_itoa(g_exit_status);
     else
     {
         char **sorted_env = dup_array(shell->keys);
@@ -126,7 +126,7 @@ char *dollar_config(char *str, int pos, t_shell *shell)
     if (str[pos] == '$')
     {
         if (str[pos + 1] == '?')
-            return ft_itoa(g_env.exit_status);
+            return ft_itoa(g_exit_status);
         else if (ft_isalnum(str[pos + 1]) || str[pos + 1] == '_' || ft_isalpha(str[pos + 1]))
         {
             sorted_env = dup_array(shell->keys);
