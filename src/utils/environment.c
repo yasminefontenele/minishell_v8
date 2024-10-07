@@ -6,7 +6,7 @@
 /*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 08:50:14 by yfontene          #+#    #+#             */
-/*   Updated: 2024/10/06 20:15:28 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/08 00:04:26 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,16 @@ char **dup_array(char **env)
     sorted[i] = NULL;
     i = -1;
     while (env[++i])
+    {
         sorted[i] = ft_strdup(env[i]);
+        if (sorted[i] == NULL)
+        {
+            while (i > 0)
+                free(sorted[--i]);
+            free(sorted);
+            return NULL;
+        }
+    } 
     return sorted;
 }
 
@@ -78,7 +87,13 @@ void env_init(char **env, t_shell *shell)
     }
     shell->keys[i] = NULL;
     sorted_env = dup_array(shell->keys);
+    if (sorted_env == NULL)
+    {
+        free_form(&shell->keys);
+        ft_error("malloc failed", 1);
+    }
     sort_array(sorted_env);
+    free_str_array(sorted_env);
 }
 
 void append_to_env(char *variable, char *value, int size, t_shell *shell)

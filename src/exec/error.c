@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 16:43:00 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/07 16:27:32 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/07 23:18:22 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,3 +124,19 @@ void	ft_free(void *content)
 		close(node->out);
 	free(node);
 }
+
+void free_exec_node(t_exec *exec_node)
+{
+    if (exec_node)
+    {
+        if (exec_node->args)
+        {
+            for (int i = 0; exec_node->args[i]; i++)
+                free(exec_node->args[i]);
+            free(exec_node->args);
+        }
+        free(exec_node->path);
+        free(exec_node);
+    }
+}
+

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 19:48:13 by yasmine           #+#    #+#             */
-/*   Updated: 2024/10/07 16:40:09 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/07 22:46:39 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-//# include "./src/exec/execute.h"
 
 # define GREEN      "\033[0;32m"
 # define RED        "\033[0;31m"
@@ -207,14 +206,14 @@ t_tokens	process_quotes_tokens(t_tokens tokens, t_shell *shell);
 void		exec_process_quotes(t_tokens *tokens, t_shell *shell);
 void		type_of_separator(int *type_of, char **token);
 void		filler_stokens(char **cmds, t_tokens **token, int nbr, t_shell *shell);
-char **split_pipes(char *line);
+char 		**split_pipes(char *line);
 void		tokenize_commands(char **cmds,t_list **command_list, t_shell *shell);
 int			token_dollar_end(char *str, int i);
 int			token_word_end(char *str, int i);
 int			token_quotes_end(char *str, int i);
 int			token_redir_end(char *str, int i);
-char *parse_next_token(char *line, int reset, int keep_quotes);
-bool valid_quotes(const char *str);
+char 		*parse_next_token(char *line, int reset, int keep_quotes);
+bool 		valid_quotes(const char *str);
 
 
 #endif

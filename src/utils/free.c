@@ -6,11 +6,12 @@
 /*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 11:14:59 by yasmine           #+#    #+#             */
-/*   Updated: 2024/10/06 20:15:44 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/07 22:45:22 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
+#include "../exec/execute.h"
 
 void free_tokens(t_tokens *token)
 {
@@ -77,3 +78,4 @@ void free_split(char **split)
     }
     free(split);
 }
+

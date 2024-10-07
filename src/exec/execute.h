@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 14:57:57 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/07 16:38:45 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/07 22:45:47 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,5 +106,6 @@ char *cmd_find(char **path_env, char *comnd, char *path_full);
 char *get_env_for_export(t_shell *shell, const char *var);
 int create_here_document_fd(char *input_buffer[2], char *delimiter[2]);
 void infile_two(t_exec *node, char **ags, int *len);
+void free_exec_node(t_exec *exec_node);
 
 #endif

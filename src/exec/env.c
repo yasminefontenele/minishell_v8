@@ -6,7 +6,7 @@
 /*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 15:16:06 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/07 20:09:04 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/07 22:49:10 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ char	**set_env(char *str, char *val, char **keys, int nbr)
 		i++;
 	}
 	keys = extend_form(keys, new_entry);
+	if (!keys) 
+        free(new_entry);
 	return (keys);
 }
 

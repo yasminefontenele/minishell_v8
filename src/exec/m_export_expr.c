@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_export_expr.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 08:08:44 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/07 16:30:13 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/08 00:10:13 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -295,7 +295,17 @@ int m_export(t_shell *shell)
                     shell->keys[index] = ft_strdup(av[i]);
                 }
                 else
+                {
                     shell->keys = extend_form(shell->keys, av[i]);
+                    char **new_keys = extend_form(shell->keys, av[i]);
+                    if (new_keys)
+                        shell->keys = new_keys;
+                    else
+                    {
+                        free_form(&shell->keys);
+                        ft_error("malloc failed", 1);
+                    }
+                }
                 if (value && *value != '\0')
                     set_env_ex(shell, var_name, value);
             }
@@ -303,6 +313,7 @@ int m_export(t_shell *shell)
                 write(STDERR_FILENO, "Not a valid identifier\n", 23);
             free(var_name);
             free(value);
+            value = NULL;
         }
         else
         {
