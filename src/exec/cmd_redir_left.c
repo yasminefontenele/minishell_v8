@@ -33,6 +33,7 @@ static DIR *check_cmd(t_shell *shell, t_list *comnd, char ***str)
     }
     return (directory);
 }
+/*
 
 void duplicate_file_descriptors(int *original_stdout, int *original_stdin)
 {
@@ -46,7 +47,7 @@ void restore_file_descriptors(int original_stdout, int original_stdin)
     dup2(original_stdin, STDIN_FILENO);
     close(original_stdout);
     close(original_stdin);
-}
+}*/
 
 int handle_builtin_commands(t_shell *shell, t_exec *node, t_list *comnd)
 {
@@ -55,9 +56,9 @@ int handle_builtin_commands(t_shell *shell, t_exec *node, t_list *comnd)
         if (node->out != STDOUT_FILENO)
             dup2(node->out, STDOUT_FILENO);
         pipe_builtin(shell, comnd, &g_exit_status, ft_strlen(node->args[0]));
-        return 1; // Indicate that a built-in command was handled
+        return (1);
     }
-    return 0; // Indicate that it was not a built-in command
+    return (0);
 }
 
 int check_directory(t_shell *shell, t_list *comnd, char ***str, t_exec *node)
@@ -67,11 +68,11 @@ int check_directory(t_shell *shell, t_list *comnd, char ***str, t_exec *node)
     {
         closedir(directory);
         m_error(ERR_ISDIR, node->args[0], 126);
-        return 1; // Indicate that a directory error occurred
+        return (1);
     }
-    return 0; // No directory error
+    return (0);
 }
-
+/*
 void cleanup_redirection_tokens(t_exec *node)
 {
     int i = 0;
@@ -82,12 +83,12 @@ void cleanup_redirection_tokens(t_exec *node)
             ft_strcmp(node->args[i], ">>") == 0 || 
             ft_strcmp(node->args[i], "<<") == 0)
         {
-            node->args[i] = NULL; // Nullify the redirection tokens
+            node->args[i] = NULL;
         }
         i++;
     }
 }
-
+*/
 void fork_and_execute(t_shell *shell, t_exec *node)
 {
     pid_t pid = fork();
@@ -119,41 +120,31 @@ void fork_and_execute(t_shell *shell, t_exec *node)
 void command_get_redir_left(t_shell *shell, t_list *comnd)
 {
     t_exec *node = comnd->content;
-    int original_stdout, original_stdin;
-    char **str = NULL;
+    int original_stdout;
+    int original_stdin;
+    char **str;
 
+    node = comnd->content;
+    str = NULL;
     duplicate_file_descriptors(&original_stdout, &original_stdin);
-
-    if (handle_builtin_commands(shell, node, comnd))
+    if (!handle_builtin_commands(shell, node, comnd) && 
+        !check_directory(shell, comnd, &str, node) && 
+        node->path && access(node->path, X_OK) == 0)
     {
-        restore_file_descriptors(original_stdout, original_stdin);
-        return;
+        cleanup_redirection_tokens(node);
+        fork_and_execute(shell, node);
     }
-
-    if (check_directory(shell, comnd, &str, node))
-    {
-        restore_file_descriptors(original_stdout, original_stdin);
-        return;
-    }
-
-    if (node->path && access(node->path, X_OK) == 0)
-    {
-        cleanup_redirection_tokens(node); // Clean up redirection tokens
-        fork_and_execute(shell, node); // Fork and execute the command
-    }
-    else
-    {
+    else if (!node->path || access(node->path, X_OK) != 0)
         m_error(ERR_NEWCMD, node->args[0], 126);
-    }
-
     close(node->out);
     if (node->in != STDIN_FILENO)
         close(node->in);
-
     restore_file_descriptors(original_stdout, original_stdin);
 }
 
 /*
+
+
 void command_get_redir_left(t_shell *shell, t_list *comnd)
 {
     t_exec *node;

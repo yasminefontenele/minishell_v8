@@ -6,7 +6,7 @@
 /*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 17:01:48 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/08 15:41:09 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/08 18:19:12 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,20 @@
 #include "./src/exec/execute.h"
 
 t_env   g_env;
+
+void	ft_free(void *content)
+{
+	t_exec *node;
+    
+    node = content;
+	free_form(&node->args);
+	free(node->path);
+	if (node->in != STDIN_FILENO)
+		close(node->in);
+	if (node->out != STDOUT_FILENO)
+		close(node->out);
+	free(node);
+}
 
 void	sigint_handler(int sig)
 {

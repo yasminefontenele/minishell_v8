@@ -6,7 +6,7 @@
 /*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 14:57:57 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/08 16:59:22 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/08 19:42:48 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,5 +115,14 @@ void remove_quotes_from_args(t_exec *node);
 
 void command_get_redir(t_shell *shell, t_list *comnd);
 void command_get_redir_left(t_shell *shell, t_list *comnd);
+void restore_file_descriptors(int original_stdout, int original_stdin);
+void duplicate_file_descriptors(int *original_stdout, int *original_stdin);
+void cleanup_redirection_tokens(t_exec *node);
+
+void handle_execution(t_shell *shell, t_list *commands_list, t_exec *exec);
+void handle_redirection(t_shell *shell, t_list *commands_list, t_exec *exec);
+void fork_and_execute_command(t_shell *shell, t_list *cmd_node, int prev_fd, int fd[2]);
+int	char_count(char *str, char c);
+int open_fd(int fd, char *path, int is_output, int append);
 
 #endif

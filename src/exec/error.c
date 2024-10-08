@@ -6,7 +6,7 @@
 /*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 16:43:00 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/08 15:49:14 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/08 18:28:21 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void m_error(int error_type, char *limit, int status)
     ft_putstr_fd("\n", 2);
     g_exit_status = status;
 }
-
+/*
 void error_cd(char **args, char *target_dir)
 {
     DIR *dir;
@@ -84,7 +84,7 @@ void error_cd(char **args, char *target_dir)
         }
     }
 }
-
+*/
 
 int	error_unset(char *av)
 {
@@ -97,72 +97,17 @@ int	error_unset(char *av)
 void	m_perror(const char *msg, const char *detail, int exit_code)
 {
 	if (exit_code == ERR_DUP)
-	{
 		write(STDERR_FILENO, msg, ft_strlen(msg));
-	}
 	if (detail)
 	{
 		write(STDERR_FILENO, ": ", 2);
 		write(STDERR_FILENO, detail, ft_strlen(detail));
 	}
 	write(STDERR_FILENO, "\n", 1);
-
 	if (exit_code != 0)
 		exit(exit_code);
 }
 
-void	ft_free(void *content)
-{
-	t_exec *node;
-    
-    node = content;
-	free_form(&node->args);
-	free(node->path);
-	if (node->in != STDIN_FILENO)
-		close(node->in);
-	if (node->out != STDOUT_FILENO)
-		close(node->out);
-	free(node);
-}
-/*
-// NEW LEAK ONE
-
-void ft_free(void *content)
-{
-    t_exec *node = (t_exec *)content;
-
-    if (node)
-    {
-        if (node->args)
-        {
-            free_form(&node->args);  // Free args if they are allocated
-        }
-
-        if (node->path)
-        {
-            free(node->path);  // Free the path if it is allocated
-            node->path = NULL; // Avoid dangling pointer
-        }
-
-        // Close file descriptors if they are valid
-        if (node->in > STDERR_FILENO)  // Check if valid
-        {
-            close(node->in);
-            node->in = -1;  // Set to -1 after closing
-        }
-
-        if (node->out > STDERR_FILENO)  // Check if valid
-        {
-            close(node->out);
-            node->out = -1;  // Set to -1 after closing
-        }
-
-        free(node);  // Finally free the node itself
-        node = NULL;  // Set pointer to NULL after freeing
-    }
-}
-
-*/
 void free_exec_node(t_exec *exec_node)
 {
     int i;

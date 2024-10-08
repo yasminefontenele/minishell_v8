@@ -3,6 +3,19 @@
 #include "execute.h"
 #include "../../minishell.h"
 
+void duplicate_file_descriptors(int *original_stdout, int *original_stdin)
+{
+    *original_stdout = dup(STDOUT_FILENO);
+    *original_stdin = dup(STDIN_FILENO);
+}
+
+void restore_file_descriptors(int original_stdout, int original_stdin)
+{
+    dup2(original_stdout, STDOUT_FILENO);
+    dup2(original_stdin, STDIN_FILENO);
+    close(original_stdout);
+    close(original_stdin);
+}
 
 void handle_memory_failure(char *message)
 {
