@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 16:34:30 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/07 20:46:47 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/08 08:35:20 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,6 +212,89 @@ void command_get_redir(t_shell *shell, t_list *comnd)
     close(node->out);
 }
 
+void command_get_redir_left(t_shell *shell, t_list *comnd)
+{
+    t_exec *node;
+    DIR *directory;
+    char **str;
+    pid_t pid;
+    int status;
+    int original_stdout;
+    int original_stdin;
+    int i;
+
+    str = NULL;
+    node = comnd->content;
+    original_stdout = dup(STDOUT_FILENO); 
+    original_stdin = dup(STDIN_FILENO);
+    i = 0;
+    if (built_check(node))
+    {
+        if (node->out != STDOUT_FILENO)
+            dup2(node->out, STDOUT_FILENO);
+        pipe_builtin(shell, comnd, &g_exit_status, ft_strlen(node->args[0]));
+        dup2(original_stdout, STDOUT_FILENO);
+        dup2(original_stdin, STDIN_FILENO);
+        close(original_stdout);
+        close(original_stdin);
+        return;
+    }
+    directory = check_cmd(shell, comnd, &str);
+    if (directory) {
+        closedir(directory);
+        m_error(ERR_ISDIR, node->args[0], 126);
+        dup2(original_stdout, STDOUT_FILENO);
+        dup2(original_stdin, STDIN_FILENO);
+        close(original_stdout);
+        close(original_stdin);
+        return;
+    }
+    if (node->path && access(node->path, X_OK) == 0) {
+        pid = fork();
+        if (pid < 0)
+        {
+            m_error(ERR_FORK, "Fork failed", 1);
+            return;
+        }
+        else if (pid == 0)
+        {
+            
+            if (node->in != STDIN_FILENO)
+                dup2(node->in, STDIN_FILENO);
+            if (node->out != STDOUT_FILENO)
+                dup2(node->out, STDOUT_FILENO);
+            
+            while (node->args[i])
+            {
+                if (ft_strcmp(node->args[i], "<") == 0 || ft_strcmp(node->args[i], ">") == 0 ||
+                    ft_strcmp(node->args[i], ">>") == 0 || ft_strcmp(node->args[i], "<<") == 0)
+                {
+                    node->args[i] = NULL;
+                }
+                i++;
+            } 
+            execve(node->path, node->args, shell->keys);
+            m_error(ERR_NEWCMD, node->args[0], 126);
+            exit(126);
+        }
+        else
+        {
+            waitpid(pid, &status, 0);
+            if (WIFEXITED(status))
+                g_exit_status = WEXITSTATUS(status);
+            dup2(original_stdout, STDOUT_FILENO);
+            dup2(original_stdin, STDIN_FILENO);
+        }
+    } else
+        m_error(ERR_NEWCMD, node->args[0], 126);
+    close(node->out);
+    if (node->in != STDIN_FILENO)
+        close(node->in);
+    
+    dup2(original_stdout, STDOUT_FILENO);
+    dup2(original_stdin, STDIN_FILENO);
+}
+
 
 void cmd_execute(t_shell *shell, t_list *commands_list)
 {
@@ -230,6 +313,11 @@ void cmd_execute(t_shell *shell, t_list *commands_list)
     if (check == 1)
     {
         command_get_redir(shell, commands_list);
+        return;
+    }
+    if (check == 5)
+    {
+        command_get_redir_left(shell, commands_list);
         return;
     }
     if (check == 2)
