@@ -6,7 +6,7 @@
 /*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 16:34:30 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/08 14:29:00 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/08 16:31:02 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "../../minishell.h"
 #include <dirent.h>
 
-
+/*
 static DIR *check_cmd(t_shell *shell, t_list *comnd, char ***str)
 {
     t_exec *node;
@@ -43,7 +43,7 @@ static DIR *check_cmd(t_shell *shell, t_list *comnd, char ***str)
     }
     return (directory);
 }
-/*
+
 /// LAST THAT WORKED !!
 void command_get_single(t_shell *shell, t_list *comnd)
 {
@@ -144,7 +144,7 @@ void command_get_pipeline(t_shell *shell, t_list *comnd)
         m_error(ERR_NEWCMD, node->args[0], 127);
     free_form(&str);
 }
-*/
+
 
 /// WORKS LAST!!!!!!!!!!!
 
@@ -209,6 +209,7 @@ void command_get_redir(t_shell *shell, t_list *comnd)
         m_error(ERR_NEWCMD, node->args[0], 126);
     close(node->out);
 }
+
 
 void command_get_redir_left(t_shell *shell, t_list *comnd)
 {
@@ -294,6 +295,8 @@ void command_get_redir_left(t_shell *shell, t_list *comnd)
     dup2(original_stdin, STDIN_FILENO);
 }
 
+*/
+
 
 void cmd_execute(t_shell *shell, t_list *commands_list)
 {
@@ -331,6 +334,4 @@ void cmd_execute(t_shell *shell, t_list *commands_list)
             else
                 command_get_single(shell, commands_list);
     }
-   // free_exec_node(exec);
-   // commands_list->content = NULL;
 }

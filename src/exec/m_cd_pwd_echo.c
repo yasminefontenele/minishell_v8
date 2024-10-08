@@ -6,12 +6,78 @@
 /*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 15:15:09 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/07 16:29:42 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/08 16:54:27 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 
+int m_cd(t_shell *shell)
+{
+    char    **args;
+    char    *home_dir;
+    char    *current_dir;
+    char    *target_dir;
+
+    g_exit_status = 0;
+    args = ((t_exec *)shell->cmds->content)->args;
+
+    // Check for too many arguments
+    if (args[1] && args[2])
+    {
+        ft_putstr_fd("cd: too many arguments\n", 2);
+        g_exit_status = 1;
+        return g_exit_status;
+    }
+
+    // Get HOME directory
+    home_dir = get_env("HOME", shell->keys, 4);
+    if (!home_dir)
+    {
+        ft_putstr_fd("minishell: cd: HOME not set\n", 2);
+        g_exit_status = 1;
+        return g_exit_status;
+    }
+
+    // Determine target directory
+    if (!args[1] || ft_strcmp(args[1], "") == 0)
+        target_dir = ft_strdup(home_dir);
+    else if (ft_strcmp(args[1], "-") == 0)
+    {
+        target_dir = get_env("OLDPWD", shell->keys, 6);
+        if (!target_dir)
+        {
+            ft_putstr_fd("minishell: cd: OLDPWD not set\n", 2);
+            g_exit_status = 1;
+            free(home_dir);
+            return g_exit_status;
+        }
+    }
+    else
+        target_dir = ft_strdup(args[1]);
+
+    // Perform error checking for changing directory
+    error_cd(args, target_dir);
+    
+    // If no error occurred, update PWD and OLDPWD
+    if (!g_exit_status)
+    {
+        current_dir = getcwd(NULL, 1024);
+        if (current_dir)
+        {
+            set_env_ex(shell, "OLDPWD", current_dir);  // Use set_env_ex
+            set_env_ex(shell, "PWD", current_dir);     // Use set_env_ex
+            free(current_dir);
+        }
+    }
+
+    // Clean up
+    free(home_dir);
+    free(target_dir);
+    return g_exit_status;
+}
+
+/*
 int m_cd(t_shell *shell)
 {
     char    **args;
@@ -35,9 +101,7 @@ int m_cd(t_shell *shell)
         return (g_exit_status);
     }
     if (!args[1] || ft_strcmp(args[1], "") == 0)
-    {
         target_dir = ft_strdup(home_dir);
-    }
     else if (ft_strcmp(args[1], "-") == 0)
     {
         target_dir = get_env("OLDPWD", shell->keys, 6);
@@ -57,8 +121,8 @@ int m_cd(t_shell *shell)
         current_dir = getcwd(NULL, 1024);
         if (current_dir)
         {
-            shell->keys = set_env("OLDPWD", current_dir, shell->keys, 6);  // Set OLDPWD
-            shell->keys = set_env("PWD", current_dir, shell->keys, 3);     // Set PWD
+            shell->keys = set_env("OLDPWD", current_dir, shell->keys, 6);
+            shell->keys = set_env("PWD", current_dir, shell->keys, 3);
             free(current_dir);
         }
     }
@@ -67,6 +131,7 @@ int m_cd(t_shell *shell)
     free(target_dir);
     return (g_exit_status);
 }
+*/
 
 int	m_pwd(void)
 {

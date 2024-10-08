@@ -6,7 +6,7 @@
 /*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 16:43:00 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/08 09:38:19 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/08 15:49:14 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ void	m_perror(const char *msg, const char *detail, int exit_code)
 	if (exit_code != 0)
 		exit(exit_code);
 }
-/*
+
 void	ft_free(void *content)
 {
 	t_exec *node;
@@ -124,7 +124,7 @@ void	ft_free(void *content)
 		close(node->out);
 	free(node);
 }
-*/
+/*
 // NEW LEAK ONE
 
 void ft_free(void *content)
@@ -162,7 +162,7 @@ void ft_free(void *content)
     }
 }
 
-
+*/
 void free_exec_node(t_exec *exec_node)
 {
     int i;

@@ -3,46 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 15:16:06 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/07 22:49:10 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/08 16:59:32 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
-
-
-char	**set_env(char *str, char *val, char **keys, int nbr)
-{
-	int		i;
-	int		key_len;
-	char	*new_entry;
-	char	*full_entry;
-	
-	if (nbr < 0)
-		nbr = ft_strlen(str);	
-	full_entry = ft_strjoin(str, "=");
-	new_entry = ft_strjoin(full_entry, val);
-	free(full_entry);
-	i = 0;
-	while (keys && keys[i])
-	{
-		key_len = second_strchr(keys[i], '=');
-		if (ft_strncmp(keys[i], str, nbr) == 0 && (key_len >= nbr))
-		{
-			free(keys[i]);
-			keys[i] = new_entry;
-			return (keys);
-		}
-		i++;
-	}
-	keys = extend_form(keys, new_entry);
-	if (!keys) 
-        free(new_entry);
-	return (keys);
-}
-
 
 void set_env_ex(t_shell *shell, char *var_name, char *value)
 {

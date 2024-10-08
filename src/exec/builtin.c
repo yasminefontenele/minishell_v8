@@ -6,7 +6,7 @@
 /*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 16:20:02 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/08 08:39:31 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/08 15:00:32 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,34 +14,6 @@
 
 int					g_exit_status;
 
-char *cmd_find(char **path_env, char *comnd, char *path_full)
-{
-    char *tmp;
-    int i;
-
-    i = -1;
-    path_full = NULL;
-    while (path_env && path_env[++i])
-    {
-        tmp = ft_strjoin(path_env[i], "/");
-        if (!tmp)
-            return (NULL);  // Handle memory allocation failure
-        
-        path_full = ft_strjoin(tmp, comnd);
-        free(tmp);  // Free tmp after using it
-        if (!path_full)
-            return (NULL);  // Handle memory allocation failure
-        
-        if (access(path_full, F_OK) == 0)
-            return (path_full);  // Return path_full if command is found
-        
-        free(path_full);  // Free path_full if access failed
-        path_full = NULL; // Reset path_full to NULL after freeing
-    }
-    return (NULL);  // Return NULL if the command is not found
-}
-
-/*
 char *cmd_find(char **path_env, char *comnd, char *path_full)
 {
     char *tmp;
@@ -65,7 +37,7 @@ char *cmd_find(char **path_env, char *comnd, char *path_full)
     }
     return (NULL);
 }
-*/
+
 int handle_basic_builtins(t_shell *shell, char **args)
 {
     if (!ft_strncmp(args[0], "pwd", 3))

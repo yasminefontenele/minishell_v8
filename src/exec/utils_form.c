@@ -6,12 +6,12 @@
 /*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 16:57:00 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/08 09:29:53 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/08 15:27:33 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
-/*
+
 void free_form(char ***str)
 {
     int i;
@@ -27,22 +27,6 @@ void free_form(char ***str)
     	free(str[0]);
    	 	*str = NULL;
 	}
-}
-*/
-void free_form(char ***str)
-{
-    int i = 0;
-
-    if (str && *str)  // Check if str and *str (array of strings) are valid
-    {
-        while ((*str)[i])  // Free each string in the array
-        {
-            free((*str)[i]);
-            i++;
-        }
-        free(*str);  // Free the array itself
-        *str = NULL; // Set the pointer to NULL to avoid dangling references
-    }
 }
 
 int	form_len(char **str)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_export_expr.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 08:08:44 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/08 00:10:13 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/08 17:40:13 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -261,6 +261,76 @@ int m_export(t_shell *shell)
     char *value;
     char *equals_sign;
     int index;
+
+    av = ((t_exec *)shell->cmds->content)->args;
+    i = 1;
+    if (!av[1])
+    {
+        print_export(shell->keys);
+        return 0;
+    }
+    while (av[i])
+    {
+        equals_sign = ft_strchr(av[i], '=');
+
+        if (equals_sign != NULL)
+        {
+            split_var_value(av[i], &var_name, &value);
+            if (value && value[0] == '$')
+            {
+                char *expanded_value = get_env_for_export(shell, value + 1);
+                if (expanded_value)
+                {
+                    free(value);
+                    value = ft_strdup(expanded_value);
+                    free(expanded_value);
+                }
+            }  
+            if (var_name && is_valid_env_var(var_name))
+            {
+                index = find_key_idx(shell->keys, var_name);
+                if (index != -1)
+                    set_env_ex(shell, var_name, value);
+                else
+                {
+                    char *new_entry = ft_strjoin(var_name, "=");
+                    char *full_entry = ft_strjoin(new_entry, value);
+                    free(new_entry);
+                    shell->keys = extend_form(shell->keys, full_entry);
+                    free(full_entry);
+                }
+            }
+            else
+                write(STDERR_FILENO, "Not a valid identifier\n", 23);
+            free(var_name);
+            free(value);
+            value = NULL;
+        }
+        else
+        {
+            if (is_valid_env_var(av[i]))
+            {
+                index = find_key_idx(shell->keys, av[i]);
+                if (index == -1)
+                    shell->keys = extend_form(shell->keys, ft_strjoin(av[i], "="));
+            }
+            else
+                write(STDERR_FILENO, "Not a valid identifier\n", 23);
+        }
+        i++;
+    }
+    return 1;
+}
+
+/*
+int m_export(t_shell *shell)
+{
+    int i;
+    char **av;
+    char *var_name;
+    char *value;
+    char *equals_sign;
+    int index;
     
     av = ((t_exec *)shell->cmds->content)->args;
     i = 1;
@@ -330,6 +400,8 @@ int m_export(t_shell *shell)
     }
     return (1);
 }
+*/
+
 
 int m_expr(char **args)
 {

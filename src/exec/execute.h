@@ -6,7 +6,7 @@
 /*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 14:57:57 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/08 14:33:57 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/08 16:59:22 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ char	**dupl_form(char **f);
 char	**replace_form(char **big, char **small, int nbr);
 char	**extend_form(char **insd, char *nstr);
 char	*get_next_line(int fd);
-char	**set_env(char *str, char *val, char **keys, int nbr);
 char	*get_env(char *name, char **env, int name_len);
 void	set_env_ex(t_shell *shell, char *var_name, char *value);
 void	sigint_handler(int sig);
@@ -113,5 +112,8 @@ void handle_memory_failure(char *message);
 char **split_command_line(char *line);
 void command_get_single(t_shell *shell, t_list *comnd);
 void remove_quotes_from_args(t_exec *node);
+
+void command_get_redir(t_shell *shell, t_list *comnd);
+void command_get_redir_left(t_shell *shell, t_list *comnd);
 
 #endif

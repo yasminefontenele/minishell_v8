@@ -6,7 +6,7 @@
 /*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 15:15:49 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/07 14:24:41 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/08 17:44:13 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,7 +247,6 @@ int m_unset(t_shell *shell)
     }
     return (0);
 }
-
 
 int m_env(t_shell *shell, char **args)
 {
