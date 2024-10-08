@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:48:35 by yasmine           #+#    #+#             */
-/*   Updated: 2024/10/07 20:16:27 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/08 10:19:51 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,9 @@ int count_token(char *line)
             i++;
     }
     return (count);
-}*/
+}
+
+*/
 
 char *extract_substring(char const *s, unsigned int start, size_t end)
 {
@@ -127,4 +129,5 @@ char *extract_substring(char const *s, unsigned int start, size_t end)
 
     return (sub);
 }
+
 

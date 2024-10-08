@@ -6,7 +6,7 @@
 /*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 16:34:30 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/08 08:35:20 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/08 09:36:44 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -308,7 +308,7 @@ void cmd_execute(t_shell *shell, t_list *commands_list)
     }  
     exec = commands_list->content; 
     if (is_invalid_var_assignment(exec->args[0]))
-        return;     
+        return;   
     check = parse_redir(exec, exec->args);
     if (check == 1)
     {
@@ -332,4 +332,6 @@ void cmd_execute(t_shell *shell, t_list *commands_list)
             else
                 command_get_single(shell, commands_list);
     }
+   // free_exec_node(exec);
+   // commands_list->content = NULL;
 }

@@ -6,7 +6,7 @@
 /*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 17:01:48 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/08 08:25:36 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/08 09:48:58 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ int handle_tab()
 {
     return 0;
 }
-
+/*
+/// TRYING NEW ONE THIS ONE IS ORIGINAL
 void cleanup_shell(t_shell *shell, t_exec *exec, t_tokens *tokens)
 {
     if (shell->cmds)
@@ -74,13 +75,35 @@ void cleanup_shell(t_shell *shell, t_exec *exec, t_tokens *tokens)
         close(exec->out);
         exec->out = -1;
     }
+}*/
+
+void cleanup_shell(t_shell *shell)
+{
+    if (shell->cmds)
+    {
+        ft_lstclear(&(shell->cmds), ft_free); // Ensure ft_free handles the exec node cleanup.
+        shell->cmds = NULL;
+    }
+    if (shell->keys)
+    {
+        int i = 0;
+        while (shell->keys[i])
+        {
+            free(shell->keys[i]);
+            i++;
+        }
+        free(shell->keys);
+        shell->keys = NULL;
+    }
 }
+
+
 
 int main(int ac, char **av, char **envp)
 {
     t_shell shell;
-    t_exec  exec;
-    t_tokens tokens;
+   // t_exec  exec;
+   // t_tokens tokens = {0,0,0,NULL};
     char    *line;
     t_list  *command_list;
 
@@ -108,12 +131,13 @@ int main(int ac, char **av, char **envp)
         shell.cmds = command_list;
 		if (command_list)
 			cmd_execute(&shell, command_list);
-		ft_lstclear(&command_list, free);
+		ft_lstclear(&command_list, ft_free);
 		command_list = NULL;
+        shell.cmds = NULL;
         free(line);
       // printf("%d\n", g_env.exit_status);
     }
-    cleanup_shell(&shell, &exec, &tokens);
+    cleanup_shell(&shell);
    // printf("%d\n", g_env.exit_status);
     return (g_env.exit_status);
 }

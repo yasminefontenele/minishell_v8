@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   p_token_set.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 11:47:09 by yfontene          #+#    #+#             */
-/*   Updated: 2024/10/07 23:28:02 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/08 10:56:30 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,10 @@ int check_unclosed_quotes(char *str)
     }
     return single_quote || double_quote;
 }
-//LAST VALID VERSION BEFORE SPLIT
-/*void filler_stokens(char **cmds, t_tokens **token, int nbr, t_shell *shell)
+
+/*
+//LAST VALID VERSION BEFORE SPLIT and also gives LEAKS
+void filler_stokens(char **cmds, t_tokens **token, int nbr, t_shell *shell)
 {
     int i;
     int j;
@@ -128,7 +130,9 @@ int check_unclosed_quotes(char *str)
         free(temp);
     }
     (*token)[i].tokens[j] = NULL;
-}*/
+}
+
+*/
 
 void initialize_token(char **cmds, t_tokens **token, int i, int nbr)
 {
@@ -146,7 +150,9 @@ void initialize_token(char **cmds, t_tokens **token, int i, int nbr)
         return ;
     }
     (*token)[i].type = set_token((*token)[i]);
+    
 }
+
 
 char *expand_variable(char *original_token, int *k, t_shell *shell)
 {
@@ -314,8 +320,11 @@ char **split_command_line(char *line)
     return cmds;
 }
 
+
+/*
+
 //LAST VALID VERSION BEFORE SPLIT
-/*void tokenize_commands(char **cmdstr, t_list **commands_list, t_shell *shell)
+void tokenize_commands(char **cmdstr, t_list **commands_list, t_shell *shell)
 {
     int i;
     int j;
@@ -365,134 +374,5 @@ char **split_command_line(char *line)
         i++;
     }
     free_split(cmds);
-}*/
-
-char **split_command_and_check(char *cmdstr)
-{
-    char **cmds = split_command_line(cmdstr);
-    if (!cmds)
-    {
-        ft_error("Error: split_command_line returned NULL\n", 1);
-        return NULL;
-    }
-    return cmds;
 }
-
-t_exec *init_exec_node(char *cmd)
-{
-    t_exec *exec_node = malloc(sizeof(t_exec));
-    if (!exec_node)
-    {
-        ft_error("Malloc failed for exec_node", 1);
-        return NULL;
-    }
-    exec_node->args = malloc(sizeof(char *) * (count_token(cmd) + 1));
-    if (!exec_node->args)
-    {
-        ft_error("Malloc failed for exec_node->args", 1);
-        free(exec_node);
-        return NULL;
-    }
-    exec_node->path = NULL;
-    exec_node->in = 0;
-    exec_node->out = 1;
-    return exec_node;
-}
-
-void fill_exec_node_args(t_exec *exec_node, t_tokens *token)
-{
-    int j = 0;
-    while (token->tokens[j])
-        j++;
-
-    exec_node->args = malloc(sizeof(char *) * (j + 1));
-    if (!exec_node->args)
-    {
-        ft_error("Malloc failed for exec_node->args", 1);
-        free_exec_node(exec_node);
-        return ;
-    }
-    j = 0;
-    while (token->tokens[j])
-    {
-        exec_node->args[j] = ft_strdup(token->tokens[j]);
-        j++;
-    }
-    exec_node->args[j] = NULL;
-}
-
-void add_to_command_list(t_exec *exec_node, t_list **commands_list)
-{
-    t_list *new_node = ft_lstnew(exec_node);
-    if (!new_node)
-    {
-        ft_error("Malloc failed for new_node", 1);
-        return;
-    }
-    ft_lstadd_back(commands_list, new_node);
-}
-
-t_tokens *create_and_process_tokens(char *cmd, int index, t_shell *shell)
-{
-    t_tokens *token = malloc(sizeof(t_tokens));
-    if (!token)
-    {
-        ft_error("Malloc failed in create_and_process_tokens\n", 1);
-        return NULL;
-    }
-    filler_stokens(&cmd, &token, index, shell);
-    return token;
-}
-
-t_exec *create_and_fill_exec_node(char *cmd, t_tokens *token)
-{
-    t_exec *exec_node = init_exec_node(cmd);
-    if (!exec_node)
-        return NULL;
-
-    fill_exec_node_args(exec_node, token);
-
-    if (!(exec_node->args[0]) || ft_strlen(exec_node->args[0]) == 0 || ft_str_is_space(exec_node->args[0]))
-        return NULL;
-
-    return exec_node;
-}
-
-void process_single_command(char *cmd, t_list **commands_list, t_shell *shell, int index)
-{
-    t_tokens *token = create_and_process_tokens(cmd, index, shell);
-    if (!token)
-        return;
-
-    t_exec *exec_node = create_and_fill_exec_node(cmd, token);
-    if (!exec_node)
-    {
-        free_tokens(token);
-        free_exec_node(exec_node);
-        return ;
-    }
-
-    add_to_command_list(exec_node, commands_list);
-
-    free_tokens(token);
-    free(token->type);
-    free(token);
-}
-
-void tokenize_commands(char **cmdstr, t_list **commands_list, t_shell *shell)
-{
-    char **cmds = split_command_and_check(*cmdstr);
-    if (!cmds)
-        return;
-
-    int i = 0;
-    while (cmds[i])
-    {
-        process_single_command(cmds[i], commands_list, shell, i);
-        i++;
-    }
-
-    free_split(cmds);
-}
-
-
+*/

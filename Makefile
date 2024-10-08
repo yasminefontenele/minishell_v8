@@ -6,7 +6,7 @@
 #    By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/12 11:06:25 by yasmine           #+#    #+#              #
-#    Updated: 2024/10/07 16:25:59 by eliskam          ###   ########.fr        #
+#    Updated: 2024/10/08 11:02:32 by eliskam          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,6 +63,8 @@ UTILS_SRCS=				./src/utils/backslash.c\
 						./src/exec/utils_form.c\
 						./src/exec/env.c\
 						./src/exec/m_export_expr.c\
+						./src/exec/tokenize_utils.c\
+						./src/exec/tokenize.c\
 						
 
 SRCS=					$(UTILS_SRCS)\

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yfontene <yfontene@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 16:43:00 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/07 23:18:22 by yfontene         ###   ########.fr       */
+/*   Updated: 2024/10/08 09:38:19 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ void	m_perror(const char *msg, const char *detail, int exit_code)
 	if (exit_code != 0)
 		exit(exit_code);
 }
-
+/*
 void	ft_free(void *content)
 {
 	t_exec *node;
@@ -124,15 +124,59 @@ void	ft_free(void *content)
 		close(node->out);
 	free(node);
 }
+*/
+// NEW LEAK ONE
+
+void ft_free(void *content)
+{
+    t_exec *node = (t_exec *)content;
+
+    if (node)
+    {
+        if (node->args)
+        {
+            free_form(&node->args);  // Free args if they are allocated
+        }
+
+        if (node->path)
+        {
+            free(node->path);  // Free the path if it is allocated
+            node->path = NULL; // Avoid dangling pointer
+        }
+
+        // Close file descriptors if they are valid
+        if (node->in > STDERR_FILENO)  // Check if valid
+        {
+            close(node->in);
+            node->in = -1;  // Set to -1 after closing
+        }
+
+        if (node->out > STDERR_FILENO)  // Check if valid
+        {
+            close(node->out);
+            node->out = -1;  // Set to -1 after closing
+        }
+
+        free(node);  // Finally free the node itself
+        node = NULL;  // Set pointer to NULL after freeing
+    }
+}
+
 
 void free_exec_node(t_exec *exec_node)
 {
+    int i;
+
+    i = 0;
     if (exec_node)
     {
         if (exec_node->args)
         {
-            for (int i = 0; exec_node->args[i]; i++)
+            while (exec_node->args[i])
+            {
                 free(exec_node->args[i]);
+                i++;
+            }
             free(exec_node->args);
         }
         free(exec_node->path);
