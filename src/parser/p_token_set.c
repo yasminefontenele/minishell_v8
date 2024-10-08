@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   p_token_set.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yfontene <yfontene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 11:47:09 by yfontene          #+#    #+#             */
-/*   Updated: 2024/10/08 10:56:30 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/08 18:01:40 by yfontene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,8 +214,6 @@ void process_token(t_tokens *token, int i, int j, t_shell *shell)
         else
             token[i].tokens[j] = ft_strdup(token[i].tokens[j]);
     }
-    else
-        token[i].tokens[j] = ft_strdup(token[i].tokens[j]);
 }
 
 void combine_tokens(t_tokens *token, int i, int j)
