@@ -6,253 +6,98 @@
 /*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 08:08:44 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/08 17:40:13 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/08 20:03:00 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include "../minishell.h"
 #include "execute.h"
 
-
-/*char *remove_quotes(char *str)
+char *expand_value_if_needed(t_shell *shell, char *value)
 {
-    size_t len;
-    char *new_str;
-
-    len = ft_strlen(str);
-    if (len >= 2 && str[0] == '"' && str[len - 1] == '"')
+    if (value && value[0] == '$')
     {
-        new_str = malloc(len - 1);
-        ft_strlcpy(new_str, str + 1, len - 2);//
-        new_str[len - 2] = '\0';
-        free(str);
-        return new_str;
+        char *expanded_value = get_env_for_export(shell, value + 1);
+        if (expanded_value)
+        {
+            free(value);
+            value = ft_strdup(expanded_value);
+            free(expanded_value);
+        }
     }
-    return str;
-}*/
-
-char *remove_quotes(char *token)
-{
-    int len = ft_strlen(token);
- 
-    char *new_token = malloc(len + 1);
-    int i = 0, j = 0;
-
-    if ((token[0] == '\'' || token[0] == '"') && (token[len - 1] == token[0])) {
-        i++;
-        len--; 
-    }
-
-    while (i < len) 
-        new_token[j++] = token[i++];
-
-    new_token[j] = '\0';
-
-    return (new_token);
+    return (value);
 }
 
-
-
-//last version before the correction
-/*void split_var_value(char *arg, char **var, char **value)
+void add_or_update_env_var(t_shell *shell, char *var_name, char *value)
 {
-    printf("Argumento recebido em split_var_value: '%s'\n", arg);
-    char *eq_pos;
+    int index = find_key_idx(shell->keys, var_name);
 
-    eq_pos = strchr(arg, '=');  // Encontra a posição do '='
-    
-    if (!eq_pos)
-    {
-        // Se não houver '=', então não é uma atribuição válida de variável
-        *var = NULL;
-        *value = NULL;
-        return;
-    }
-    // Dividir a string antes do '=' para obter o nome da variável
-    *var = ft_strndup(arg, eq_pos - arg);  // Copiar a parte antes do '=' para 'var'
- 
-    printf("aqui var recebe certo var='%s', value='%s'\n", *var, *value);
-    // Se houver algo após o '=', será o valor
-    if (*(eq_pos + 1) != '\0')
-    {
-        printf("Valor após '=': %s\n", eq_pos + 1);
-        // O valor começa após o '='
-        *value = ft_strdup(eq_pos + 1);
-        printf("porque aqui da erro var='%s', value='%s'\n", *var, *value);
-        // Agora remover aspas ao redor, se houver
-        if ((*value)[0] == '"' && (*value)[strlen(*value) - 1] == '"')
-        {
-            (*value)[strlen(*value) - 1] = '\0';  // Remove a última aspa
-            memmove(*value, *value + 1, strlen(*value));  // Remove a primeira aspa
-        }
-        else if ((*value)[0] == '\'' && (*value)[strlen(*value) - 1] == '\'')
-        {
-            (*value)[strlen(*value) - 1] = '\0';  // Remove a última aspa simples
-            memmove(*value, *value + 1, strlen(*value));  // Remove a primeira aspa simples
-        }
-    }
+    if (index != -1)
+        set_env_ex(shell, var_name, value);
     else
     {
-        // Caso não haja valor após o '=', o valor é uma string vazia
-        *value = ft_strdup("");
-        printf("Sem valor após '=', definindo value como vazio: var='%s', value='%s'\n", *var, *value);
+        char *new_entry = ft_strjoin(var_name, "=");
+        char *full_entry = ft_strjoin(new_entry, value);
+        free(new_entry);
+        shell->keys = extend_form(shell->keys, full_entry);
+        free(full_entry);
     }
-     printf("apos split: var='%s', value='%s'\n", *var, *value);
-
-}*/
-
-void split_var_value(char *arg, char **var, char **value)
-{
-    char *eq_pos;
-    size_t len;
-
-    eq_pos = ft_strchr(arg, '=');
-    if (!eq_pos)
-    {
-        *var = NULL;
-        *value = NULL;
-        return;
-    }
-    *var = ft_strndup(arg, eq_pos - arg);
-    if (*(eq_pos + 1) != '\0')
-    {
-        *value = ft_strdup(eq_pos + 1);
-
-
-        len = ft_strlen(*value);
-        if (len >= 2 && ((*value)[0] == '"' && (*value)[len - 1] == '"'))
-        {
-            (*value)[len - 1] = '\0';
-            ft_memmove(*value, *value + 1, len - 1);
-        }
-        else if (len >= 2 && ((*value)[0] == '\'' && (*value)[len - 1] == '\''))
-        {
-            (*value)[len - 1] = '\0';
-            ft_memmove(*value, *value + 1, len - 1);
-        }
-    }
-    else
-        *value = ft_strdup("");
 }
-/*
+
+void handle_export_with_value(t_shell *shell, char *arg)
+{
+    char *var_name;
+    char *value;
+
+    split_var_value(arg, &var_name, &value);
+    value = expand_value_if_needed(shell, value);
+
+    if (var_name && is_valid_env_var(var_name))
+        add_or_update_env_var(shell, var_name, value);
+    else
+        write(STDERR_FILENO, "Not a valid identifier\n", 23);
+
+    free(var_name);
+    free(value);
+}
+
+void handle_export_without_value(t_shell *shell, char *arg)
+{
+    if (is_valid_env_var(arg))
+    {
+        int index = find_key_idx(shell->keys, arg);
+        if (index == -1)
+            shell->keys = extend_form(shell->keys, ft_strjoin(arg, "="));
+    }
+    else
+        write(STDERR_FILENO, "Not a valid identifier\n", 23);
+}
+
 int m_export(t_shell *shell)
 {
     int i;
     char **av;
-    char *var_name;
-    char *value;
     char *equals_sign;
-    char *quoted_value;
-    char *temp;
-    int index;
-    char *new_entry;
-    
+
     av = ((t_exec *)shell->cmds->content)->args;
     i = 1;
-
     if (!av[1])
     {
-        print_all_variables(shell->keys);
-        return 0;
+        print_export(shell->keys);
+        return (0);
     }
-
     while (av[i])
     {
         equals_sign = ft_strchr(av[i], '=');
-        if (equals_sign != NULL)
-        {
-            split_var_value(av[i], &var_name, &value);
-            if (var_name && is_valid_env_var(var_name))
-            {
-                if (value && ft_strchr(value, ' '))
-                {
-                    quoted_value = ft_strdup(value);
-
-
-                    index = find_key_idx(shell->keys, var_name);
-                    if (index != -1)
-                    {
-                        free(shell->keys[index]);
-                        shell->keys[index] = ft_strjoin(var_name, "=");
-                        shell->keys[index] = ft_strjoin(shell->keys[index], quoted_value);
-                    }
-                    else
-                    {
-                        new_entry = ft_strjoin(var_name, "=");
-                        temp = new_entry;
-                        new_entry = ft_strjoin(new_entry, quoted_value);
-                        free(temp);
-                        shell->keys = extend_form(shell->keys, new_entry);
-                        free(new_entry);
-                    }
-                    free(quoted_value);
-                }
-                else
-                {
-                    index = find_key_idx(shell->keys, var_name);
-                    if (index != -1)
-                    {
-                        free(shell->keys[index]);
-                        shell->keys[index] = ft_strdup(av[i]);
-                    }
-                    else
-                        shell->keys = extend_form(shell->keys, av[i]);
-                }
-            }
-            else
-                write(STDERR_FILENO, "Not a valid identifier\n", 23);
-            free(var_name);
-            free(value);
-        }
+        if (equals_sign)
+            handle_export_with_value(shell, av[i]);
         else
-        {
-            if (is_valid_env_var(av[i]))
-            {
-                index = find_key_idx(shell->keys, av[i]);
-                if (index == -1)
-                    shell->keys = extend_form(shell->keys, av[i]);
-                else
-                    value = av[i];
-            }
-            else
-                write(STDERR_FILENO, "Not a valid identifier\n", 23);
-        }
+            handle_export_without_value(shell, av[i]);
         i++;
     }
-    return 1;
-}
-*/
-
-void print_export(char **keys)
-{
-    int i;
-    int j;
-    char *temp;
-
-    i = 0;
-    while (keys[i] != NULL)
-    {
-        j = i + 1;
-        while (keys[j] != NULL)
-        {
-            if (strcmp(keys[i], keys[j]) > 0)
-            {
-                temp = keys[i];
-                keys[i] = keys[j];
-                keys[j] = temp;
-            }
-            j++;
-        }
-        i++;
-    }
-    i = 0;
-    while (keys[i])
-    {
-        printf("declare -x %s\n", keys[i]);
-        i++;
-    }
+    return (1);
 }
 
+/*
 int m_export(t_shell *shell)
 {
     int i;
@@ -322,117 +167,4 @@ int m_export(t_shell *shell)
     return 1;
 }
 
-/*
-int m_export(t_shell *shell)
-{
-    int i;
-    char **av;
-    char *var_name;
-    char *value;
-    char *equals_sign;
-    int index;
-    
-    av = ((t_exec *)shell->cmds->content)->args;
-    i = 1;
-    if (!av[1])
-    {
-        print_export(shell->keys);
-        return 0;
-    }
-    while (av[i])
-    {
-        equals_sign = ft_strchr(av[i], '=');
-
-        if (equals_sign != NULL)
-        {
-            split_var_value(av[i], &var_name, &value);
-            if (value && value[0] == '$')
-            {
-                char *expanded_value = get_env_for_export(shell, value + 1);
-                if (expanded_value)
-                {
-                    free(value);
-                    value = ft_strdup(expanded_value);
-                    free(expanded_value);
-                }
-            }  
-            if (var_name && is_valid_env_var(var_name))
-            {
-                index = find_key_idx(shell->keys, var_name);
-                if (index != -1)
-                {
-                    free(shell->keys[index]);
-                    shell->keys[index] = ft_strdup(av[i]);
-                }
-                else
-                {
-                    shell->keys = extend_form(shell->keys, av[i]);
-                    char **new_keys = extend_form(shell->keys, av[i]);
-                    if (new_keys)
-                        shell->keys = new_keys;
-                    else
-                    {
-                        free_form(&shell->keys);
-                        ft_error("malloc failed", 1);
-                    }
-                }
-                if (value && *value != '\0')
-                    set_env_ex(shell, var_name, value);
-            }
-            else
-                write(STDERR_FILENO, "Not a valid identifier\n", 23);
-            free(var_name);
-            free(value);
-            value = NULL;
-        }
-        else
-        {
-            if (is_valid_env_var(av[i]))
-            {
-                index = find_key_idx(shell->keys, av[i]);
-                if (index == -1)
-                    shell->keys = extend_form(shell->keys, ft_strjoin(av[i], "="));
-            }
-            else
-                write(STDERR_FILENO, "Not a valid identifier\n", 23);
-        }
-        i++;
-    }
-    return (1);
-}
 */
-
-
-int m_expr(char **args)
-{
-    int num1, num2;
-    char op;
-
-    if (!args[1] || !args[2] || !args[3])
-        return 1;
-    num1 = atoi(args[1]);
-    op = args[2][0];
-    num2 = atoi(args[3]);
-    if (op == '+')
-        printf("%d\n", num1 + num2);
-    else if (op == '-')
-        printf("%d\n", num1 - num2);
-    else if (op == '*')
-        printf("%d\n", num1 * num2);
-    else if (op == '/')
-    {
-        if (num2 == 0)
-        {
-            printf("expr: divisão por zero\n");
-            return (1);
-        }
-        printf("%d\n", num1 / num2);
-    }
-    else
-    {
-        printf("expr: operador inválido\n");
-        return (1);
-    }
-    return (0);
-}
-

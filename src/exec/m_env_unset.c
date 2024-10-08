@@ -6,7 +6,7 @@
 /*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 15:15:49 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/08 17:44:13 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/08 19:48:21 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,161 +58,8 @@ int find_key_idx(char **keys,char *key)
 
     return (-1);
 }
+
 /*
-//// LAST THAT WORKED!!!
-int m_unset(t_shell *shell)
-{
-    char **av;
-	char *var_env;
-    int i;
-    int index;
-
-	i = 1;
-	av = ((t_exec *)shell->cmds->content)->args;
-    if (form_len(av) < 2)
-        return (0);
-    if (av[1][0] == '-' && av[1][1] == 'n')
-        return (0);
-    while (av[i])
-    {
-        if (av[i][ft_strlen(av[i]) - 1] != '=')
-        {
-            var_env = ft_strjoin(av[i], "=");
-            free(av[i]);
-            av[i] = var_env;
-        }
-        index = find_key_idx(shell->keys, av[i]);
-        if (index != -1)
-        {
-            free(shell->keys[index]);
-            while (shell->keys[index])
-            {
-                shell->keys[index] = shell->keys[index + 1];
-                index++;
-            }
-        }
-        i++;
-    }
-    return (0);
-}
-
-int m_unset(t_shell *shell)
-{
-    char **av;
-    char *var_env;
-    int i;
-    int index;
-
-    i = 1;
-    av = ((t_exec *)shell->cmds->content)->args;
-
-    // Check if the command is "unset ALL VARIABLES"
-    if (av[1] && ft_strcmp(av[1], "ALL") == 0 && av[2] && ft_strcmp(av[2], "VARIABLES") == 0)
-    {
-        i = 0;
-        while (shell->keys[i])
-        {
-            free(shell->keys[i]);
-            i++;
-        }
-        free(shell->keys);
-        shell->keys = NULL;
-        return (0);
-    }
-    if (form_len(av) < 2)
-        return (0);
-    while (av[i])
-    {
-        if (av[i][ft_strlen(av[i]) - 1] != '=')
-        {
-            var_env = ft_strjoin(av[i], "=");
-            free(av[i]);
-            av[i] = var_env;
-        }
-        index = find_key_idx(shell->keys, av[i]);
-        if (index != -1)
-        {
-            free(shell->keys[index]);
-            while (shell->keys[index])
-            {
-                shell->keys[index] = shell->keys[index + 1];
-                index++;
-            }
-        }
-        i++;
-    }
-    return (0);
-}
-
-///LAST THAT WORKED TODAY
-int m_unset(t_shell *shell)
-{
-    char **av;
-    char *var_env;
-    int i;
-    int index;
-
-    i = 1;
-    av = ((t_exec *)shell->cmds->content)->args;
-    if (form_len(av) < 2)
-        return (0); // No variables to unset
-    if (av[1][0] == '-' && av[1][1] == 'n')
-        return (0); // Handle the -n case, as specified
-
-    while (av[i])
-    {
-        // Append '=' if not present
-        if (av[i][ft_strlen(av[i]) - 1] != '=')
-        {
-            var_env = ft_strjoin(av[i], "=");
-            if (var_env == NULL) // Always check for NULL after memory allocation
-                return (-1); // Handle memory error
-            free(av[i]);
-            av[i] = var_env;
-        }
-        // Find the index of the variable
-        index = find_key_idx(shell->keys, av[i]);
-        if (index != -1) // If variable found
-        {
-            free(shell->keys[index]);
-            // Shift left to remove the key
-            while (shell->keys[index])
-            {
-                shell->keys[index] = shell->keys[index + 1];
-                index++;
-            }
-        }
-        i++;
-    }
-    return (0); // Return success
-}
-
-
-int m_env(t_shell *shell, char **args)
-{
-    int i;
-
-    if (!shell || !shell->keys)
-    {
-        ft_error("No environment is set", 1);
-        return (1);
-    }
-    if (args && args[1] && ft_strcmp(args[1], "PATH") == 0)
-    {
-        ft_error("env:'PATH': No such file or directory ", 127);
-        return (1);
-    }
-    i = 0;
-    while (shell->keys[i])
-    {
-        printf("%s\n", shell->keys[i]);
-        i++;
-    }
-    
-    return (0);
-}
-*/
-
 int m_unset(t_shell *shell)
 {
     char **av;
@@ -221,10 +68,8 @@ int m_unset(t_shell *shell)
 
     i = 1;
     av = ((t_exec *)shell->cmds->content)->args;
-
     if (form_len(av) < 2)
         return (0);
-
     while (av[i])
     {
         if (av[i][0] == '-')
@@ -243,6 +88,47 @@ int m_unset(t_shell *shell)
                 index++;
             }
         }
+        i++;
+    }
+    return (0);
+}
+*/
+
+void unset_variable(t_shell *shell, char *arg)
+{
+    int index;
+
+    index = find_key_idx(shell->keys, arg);
+    if (index != -1)
+    {
+        free(shell->keys[index]);
+        while (shell->keys[index])
+        {
+            shell->keys[index] = shell->keys[index + 1];
+            index++;
+        }
+    }
+}
+
+int m_unset(t_shell *shell)
+{
+    char **av;
+    int i;
+
+    i = 1;
+    av = ((t_exec *)shell->cmds->content)->args;
+    if (form_len(av) < 2)
+        return (0);
+
+    while (av[i])
+    {
+        if (av[i][0] == '-')
+        {
+            printf("unset: invalid option -- '%s'\n", av[i]);
+            i++;
+            return (0);
+        }
+        unset_variable(shell, av[i]);
         i++;
     }
     return (0);
@@ -268,9 +154,7 @@ int m_env(t_shell *shell, char **args)
     {
         equals_sign = ft_strchr(shell->keys[i], '=');
         if (equals_sign && equals_sign[1] != '\0')
-        {
             printf("%s\n", shell->keys[i]);
-        }
         i++;
     } 
     return (0);

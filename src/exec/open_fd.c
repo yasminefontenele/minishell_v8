@@ -2,6 +2,17 @@
 
 #include "execute.h"
 
+int ft_str_is_space(char *line)
+{
+    while (*line)
+    {
+        if (!ft_isspace(*line))
+            return 0;
+        line++;
+    }
+    return 1;
+}
+
 int	char_count(char *str, char c)
 {
 	int	nbr;

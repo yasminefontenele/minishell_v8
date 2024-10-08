@@ -6,7 +6,7 @@
 #    By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/12 11:06:25 by yasmine           #+#    #+#              #
-#    Updated: 2024/10/08 19:44:37 by eliskam          ###   ########.fr        #
+#    Updated: 2024/10/08 20:07:29 by eliskam          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -73,6 +73,8 @@ UTILS_SRCS=				./src/utils/backslash.c\
 						./src/exec/checks.c\
 						./src/exec/cd.c\
 						./src/exec/open_fd.c\
+						./src/exec/export_utils.c\
+						./src/exec/heredocs.c\
 						
 			
 
