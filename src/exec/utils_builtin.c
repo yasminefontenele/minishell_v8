@@ -6,7 +6,7 @@
 /*   By: emencova <emencova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 17:26:56 by emencova          #+#    #+#             */
-/*   Updated: 2024/09/10 16:31:06 by emencova         ###   ########.fr       */
+/*   Updated: 2024/10/08 22:23:31 by emencova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,20 +62,20 @@ int	second_strchr(char *str, int c)
 	return (-1);
 }
 
-int ft_charstr(const char *str, char *set)
+int	ft_charstr(const char *str, char *set)
 {
-    int i;
-    
-    i = 0;
-    if (!str)
-        return (-1);
-    while (str[i] != '\0')
-    {
-        if (ft_strchr(set, str[i]))
-            return (i);
-        i++;
-    }
-    return (-1);
+	int	i;
+
+	i = 0;
+	if (!str)
+		return (-1);
+	while (str[i] != '\0')
+	{
+		if (ft_strchr(set, str[i]))
+			return (i);
+		i++;
+	}
+	return (-1);
 }
 
 int	put_form_fd(char **form, int newline, int fd)

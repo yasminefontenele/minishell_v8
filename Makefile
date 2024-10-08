@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+         #
+#    By: emencova <emencova@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/12 11:06:25 by yasmine           #+#    #+#              #
-#    Updated: 2024/10/08 20:07:58 by eliskam          ###   ########.fr        #
+#    Updated: 2024/10/08 22:39:40 by emencova         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -75,7 +75,8 @@ UTILS_SRCS=				./src/utils/backslash.c\
 						./src/exec/open_fd.c\
 						./src/exec/export_utils.c\
 						./src/exec/heredocs.c\
-						
+						./src/exec/m_expr.c\
+						./src/exec/extend_form.c\
 
 SRCS=					$(UTILS_SRCS)\
 						$(PARSER_SRCS)

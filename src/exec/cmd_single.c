@@ -1,96 +1,109 @@
-///HEADER FILE
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cmd_single.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: emencova <emencova@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/08 21:03:12 by emencova          #+#    #+#             */
+/*   Updated: 2024/10/08 21:07:28 by emencova         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "execute.h"
 #include "../../minishell.h"
 #include <dirent.h>
 
-static DIR *check_cmd(t_shell *shell, t_list *comnd, char ***str)
+static DIR	*check_cmd(t_shell *shell, t_list *comnd, char ***str)
 {
-    t_exec *node;
-    DIR *directory;
-    char *path_env;
+	t_exec	*node;
+	DIR		*directory;
+	char	*path_env;
 
-    directory = NULL;
-    node = comnd->content;
-    if (node && node->args)
-        directory = opendir((const char *)node->args);
-    if (node && node->args && ft_strchr(*node->args, '/') && !directory)
-    {
-        *str = ft_split(*node->args, '/');
-        node->path = ft_strdup(*node->args);
-        free(node->args[0]);
-        node->args[0] = ft_strdup(str[0][form_len(*str) - 1]);
-    }
-    else if (!built_check(node) && node && node->args && !directory)
-    {
-        path_env = get_env("PATH", shell->keys, 4);
-        *str = ft_split(path_env, ':');
-        if (!*str)
-            m_error(ERR_PIPE, "Failed to split PATH", 127);
-        free(path_env);
-        node->path = cmd_find(*str, *node->args, node->path);
-    }
-    return (directory);
+	directory = NULL;
+	node = comnd->content;
+	if (node && node->args)
+		directory = opendir((const char *)node->args);
+	if (node && node->args && ft_strchr(*node->args, '/') && !directory)
+	{
+		*str = ft_split(*node->args, '/');
+		node->path = ft_strdup(*node->args);
+		free(node->args[0]);
+		node->args[0] = ft_strdup(str[0][form_len(*str) - 1]);
+	}
+	else if (!built_check(node) && node && node->args && !directory)
+	{
+		path_env = get_env("PATH", shell->keys, 4);
+		*str = ft_split(path_env, ':');
+		if (!*str)
+			m_error(ERR_PIPE, "Failed to split PATH", 127);
+		free(path_env);
+		node->path = cmd_find(*str, *node->args, node->path);
+	}
+	return (directory);
 }
 
-static int handle_builtin_command(t_shell *shell, t_list *comnd, t_exec *node)
+static int	handle_builtin_command(t_shell *shell, t_list *comnd, t_exec *node)
 {
-    if (built_check(node))
-    {
-        builtin(shell, comnd, &g_exit_status, ft_strlen(node->args[0]));
-        return (1);
-    }
-    return (0);
+	if (built_check(node))
+	{
+		builtin(shell, comnd, &g_exit_status, ft_strlen(node->args[0]));
+		return (1);
+	}
+	return (0);
 }
 
-static int check_and_exec_command(t_shell *shell, t_exec *node)
+static int	check_and_exec_command(t_shell *shell, t_exec *node)
 {
-    if (node->path && access(node->path, X_OK) == 0)
-    {
-        pid_t pid = fork();
-        if (pid < 0)
-        {
-            m_error(ERR_FORK, "Fork failed", 1);
-            return 1;
-        }
-        if (pid == 0)
-        {
-            execve(node->path, node->args, shell->keys);
-            exit(126);
-        }
-        waitpid(pid, &g_exit_status, 0);
-        return (1);
-    }
-    return (0);
+	pid_t	pid;
+
+	if (node->path && access(node->path, X_OK) == 0)
+	{
+		pid = fork();
+		if (pid < 0)
+		{
+			m_error(ERR_FORK, "Fork failed", 1);
+			return (1);
+		}
+		if (pid == 0)
+		{
+			execve(node->path, node->args, shell->keys);
+			exit(126);
+		}
+		waitpid(pid, &g_exit_status, 0);
+		return (1);
+	}
+	return (0);
 }
 
-static int check_for_directory(t_shell *shell, t_list *comnd, char ***str)
+static int	check_for_directory(t_shell *shell, t_list *comnd, char ***str)
 {
-    DIR *directory = check_cmd(shell, comnd, str);
-    if (directory)
-    {
-        closedir(directory);
-        return (1);
-    }
-    return (0);
+	DIR	*directory;
+
+	directory = check_cmd(shell, comnd, str);
+	if (directory)
+	{
+		closedir(directory);
+		return (1);
+	}
+	return (0);
 }
 
-void command_get_single(t_shell *shell, t_list *comnd)
+void	command_get_single(t_shell *shell, t_list *comnd)
 {
-    t_exec *node;
-    char **str;
-    
-    str = NULL;
-    node = comnd->content;
-    if (handle_builtin_command(shell, comnd, node))
-        return;
-    if (check_for_directory(shell, comnd, &str))
-        return;
-    remove_quotes_from_args(node);
-    if (!check_and_exec_command(shell, node))
-        m_error(ERR_NEWCMD, node->args[0], 126);  
-    free_form(&str);
+	t_exec	*node;
+	char	**str;
+
+	str = NULL;
+	node = comnd->content;
+	if (handle_builtin_command(shell, comnd, node))
+		return ;
+	if (check_for_directory(shell, comnd, &str))
+		return ;
+	remove_quotes_from_args(node);
+	if (!check_and_exec_command(shell, node))
+		m_error(ERR_NEWCMD, node->args[0], 126);
+	free_form(&str);
 }
 
 /*

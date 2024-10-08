@@ -3,61 +3,60 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
+/*   By: emencova <emencova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 15:16:06 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/08 16:59:32 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/08 21:12:30 by emencova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 
-void set_env_ex(t_shell *shell, char *var_name, char *value)
+void	set_env_ex(t_shell *shell, char *var_name, char *value)
 {
-    int index;
-    char *new_entry;
-	char *tmp;
+	int		index;
+	char	*new_entry;
+	char	*tmp;
 
-    tmp = ft_strjoin(var_name, "=");
-	if(!tmp)
+	tmp = ft_strjoin(var_name, "=");
+	if (!tmp)
 		ft_error("Malloc failed in set_env_ex", 1);
-    new_entry = ft_strjoin(tmp, value);
+	new_entry = ft_strjoin(tmp, value);
 	free(tmp);
-    index = find_key_idx(shell->keys, var_name);
-    if (index != -1)
-    {
-        free(shell->keys[index]);
-        shell->keys[index] = ft_strdup(new_entry);
-    }
-    else
-        shell->keys = extend_form(shell->keys, new_entry);
-    free(new_entry);
+	index = find_key_idx(shell->keys, var_name);
+	if (index != -1)
+	{
+		free(shell->keys[index]);
+		shell->keys[index] = ft_strdup(new_entry);
+	}
+	else
+		shell->keys = extend_form(shell->keys, new_entry);
+	free(new_entry);
 }
 
-char *get_env_for_export(t_shell *shell, const char *var)
+char	*get_env_for_export(t_shell *shell, const char *var)
 {
-    int i;
-    char *env_var;
-    char *env_value;
+	int		i;
+	char	*env_var;
+	char	*env_value;
 
 	i = 0;
-    if (!var || !*var)
-        return NULL;
-    while (shell->keys[i])
-    {
-        env_var = ft_strjoin(var, "=");
-        if (ft_strncmp(shell->keys[i], env_var, ft_strlen(env_var)) == 0)
-        {
-            env_value = shell->keys[i] + ft_strlen(env_var);
-            free(env_var);
-            return ft_strdup(env_value);
-        }
-        free(env_var);
+	if (!var || !*var)
+		return (NULL);
+	while (shell->keys[i])
+	{
+		env_var = ft_strjoin(var, "=");
+		if (ft_strncmp(shell->keys[i], env_var, ft_strlen(env_var)) == 0)
+		{
+			env_value = shell->keys[i] + ft_strlen(env_var);
+			free(env_var);
+			return (ft_strdup(env_value));
+		}
+		free(env_var);
 		i++;
-    }
-    return (NULL);
+	}
+	return (NULL);
 }
-
 
 char	*get_env(char *name, char **env, int name_len)
 {

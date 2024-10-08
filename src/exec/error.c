@@ -3,88 +3,44 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
+/*   By: emencova <emencova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 16:43:00 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/08 18:28:21 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/08 22:41:50 by emencova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 #include <dirent.h>
 
-void m_error(int error_type, char *limit, int status)
+void	m_error(int error_type, char *limit, int status)
 {
-    if (error_type == ERR_NEWDIR)
-        ft_putstr_fd("no such file or directory: ", 2);
-    else if (error_type == ERR_NOTDIR)
-        ft_putstr_fd("not a directory: ", 2);
-    else if (error_type == ERR_NWPERM)
-        ft_putstr_fd("permission denied: ", 2);
-    else if (error_type == ERR_DUP)
-        ft_putstr_fd("dup2 error: ", 2);
-    else if (error_type == ERR_FORK)
-        ft_putstr_fd("fork error: ", 2);
-    else if (error_type == ERR_QUOTE)
+	if (error_type == ERR_NEWDIR)
+		ft_putstr_fd("no such file or directory: ", 2);
+	else if (error_type == ERR_NOTDIR)
+		ft_putstr_fd("not a directory: ", 2);
+	else if (error_type == ERR_NWPERM)
+		ft_putstr_fd("permission denied: ", 2);
+	else if (error_type == ERR_DUP)
+		ft_putstr_fd("dup2 error: ", 2);
+	else if (error_type == ERR_FORK)
+		ft_putstr_fd("fork error: ", 2);
+	else if (error_type == ERR_QUOTE)
 		ft_putstr_fd("error with matching quote\n", 2);
-    else if (error_type == ERR_NEWCMD)
+	else if (error_type == ERR_NEWCMD)
 		ft_putstr_fd("command not found: ", 2);
-    else if (error_type == ERR_PIPE)
+	else if (error_type == ERR_PIPE)
 		ft_putstr_fd("error creating pipe\n", 2);
-    else if (error_type == ERR_PIPEND)
+	else if (error_type == ERR_PIPEND)
 		ft_putstr_fd("syntax error near unexpected token `|'\n", 2);
 	else if (error_type == ERR_MEM)
 		ft_putstr_fd("no memory left on device\n", 2);
 	else if (error_type == ERR_ISDIR)
 		ft_putstr_fd("Is a directory: ", 2);
-    ft_putstr_fd(limit, 2);
-    ft_putstr_fd("\n", 2);
-    g_exit_status = status;
+	ft_putstr_fd(limit, 2);
+	ft_putstr_fd("\n", 2);
+	g_exit_status = status;
 }
-/*
-void error_cd(char **args, char *target_dir)
-{
-    DIR *dir;
-
-    if (!args[1] && (!target_dir || target_dir[0] == '\0'))
-    {
-        g_exit_status = 1;
-        ft_putstr_fd("minishell: cd: HOME not set\n", 2);
-        return;
-    }
-    if (args[1])
-    {
-        if (access(args[1], F_OK) == -1)
-        {
-            m_error(ERR_NEWDIR, args[1], 1);
-            return;
-        }
-        dir = opendir(args[1]);
-        if (!dir)
-        {
-            if (errno == ENOTDIR)
-                m_error(ERR_NOTDIR, args[1], 1);
-            else
-                m_error(ERR_NEWDIR, args[1], 1);
-            return;
-        }
-        if (chdir(args[1]) == -1)
-        {
-            perror("cd");
-            g_exit_status = 1;
-        }
-        closedir(dir);
-    }
-    else if (target_dir)
-    {
-        if (chdir(target_dir) == -1)
-        {
-            perror("cd");
-            g_exit_status = 1;
-        }
-    }
-}
-*/
 
 int	error_unset(char *av)
 {
@@ -108,24 +64,23 @@ void	m_perror(const char *msg, const char *detail, int exit_code)
 		exit(exit_code);
 }
 
-void free_exec_node(t_exec *exec_node)
+void	free_exec_node(t_exec *exec_node)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    if (exec_node)
-    {
-        if (exec_node->args)
-        {
-            while (exec_node->args[i])
-            {
-                free(exec_node->args[i]);
-                i++;
-            }
-            free(exec_node->args);
-        }
-        free(exec_node->path);
-        free(exec_node);
-    }
+	i = 0;
+	if (exec_node)
+	{
+		if (exec_node->args)
+		{
+			while (exec_node->args[i])
+			{
+				free(exec_node->args[i]);
+				i++;
+			}
+			free(exec_node->args);
+		}
+		free(exec_node->path);
+		free(exec_node);
+	}
 }
-
