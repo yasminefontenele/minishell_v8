@@ -6,7 +6,7 @@
 /*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 14:57:57 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/08 11:03:15 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/08 14:33:57 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ int		form_len(char **str);
 int 	handle_basic_builtins(t_shell *shell, char **args);
 void	free_form(char ***str);
 void	m_perror(const char *msg, const char *detail, int exit_code);
-void 	run_capture_output(char ***output, char *command_path, char *command_args, char **envp);
 void	command_get_single(t_shell *shell, t_list *comnd);
 void	cmd_execute(t_shell *shell, t_list *cmd);
 void 	m_error(int error_type, char *limit, int status);
@@ -112,5 +111,7 @@ void free_exec_node(t_exec *exec_node);
 t_tokens *create_and_fill_tokens(char **cmd, int index, t_shell *shell);
 void handle_memory_failure(char *message);
 char **split_command_line(char *line);
+void command_get_single(t_shell *shell, t_list *comnd);
+void remove_quotes_from_args(t_exec *node);
 
 #endif

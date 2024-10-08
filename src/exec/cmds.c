@@ -6,7 +6,7 @@
 /*   By: eliskam <eliskam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 16:34:30 by emencova          #+#    #+#             */
-/*   Updated: 2024/10/08 09:36:44 by eliskam          ###   ########.fr       */
+/*   Updated: 2024/10/08 14:29:00 by eliskam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static DIR *check_cmd(t_shell *shell, t_list *comnd, char ***str)
     }
     return (directory);
 }
-
+/*
 /// LAST THAT WORKED !!
 void command_get_single(t_shell *shell, t_list *comnd)
 {
@@ -104,8 +104,6 @@ void command_get_single(t_shell *shell, t_list *comnd)
     free_form(&str);
 }
 
-
-
 /// WORKS WITH unset USER | env | grep USER
 
 void command_get_pipeline(t_shell *shell, t_list *comnd)
@@ -146,7 +144,7 @@ void command_get_pipeline(t_shell *shell, t_list *comnd)
         m_error(ERR_NEWCMD, node->args[0], 127);
     free_form(&str);
 }
-
+*/
 
 /// WORKS LAST!!!!!!!!!!!
 
@@ -240,7 +238,8 @@ void command_get_redir_left(t_shell *shell, t_list *comnd)
         return;
     }
     directory = check_cmd(shell, comnd, &str);
-    if (directory) {
+    if (directory)
+    {
         closedir(directory);
         m_error(ERR_ISDIR, node->args[0], 126);
         dup2(original_stdout, STDOUT_FILENO);

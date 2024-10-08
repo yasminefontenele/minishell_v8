@@ -19,3 +19,20 @@ t_tokens *create_and_fill_tokens(char **cmd, int index, t_shell *shell)
     filler_stokens(cmd, &token, index, shell);
     return (token);
 }
+
+void remove_quotes_from_args(t_exec *node)
+{
+    int i = 0;
+    char *temp;
+
+    while (node->args[i])
+    {
+        temp = remove_quotes(node->args[i]);
+        if (temp)
+        {
+            free(node->args[i]);
+            node->args[i] = temp;
+        }
+        i++;
+    }
+}
